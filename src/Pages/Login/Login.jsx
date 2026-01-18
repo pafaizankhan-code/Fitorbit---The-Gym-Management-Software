@@ -33,16 +33,6 @@ const Login = () => {
   
   const navigate = useNavigate();
 
-  // Valid email/password combinations
-  const validCredentials = [
-    { email: 'admin@fitorbit.com', password: 'Admin@123' },
-    { email: 'owner@fitorbit.com', password: 'Owner@456' },
-    { email: 'manager@fitorbit.com', password: 'Manager@789' },
-    { email: 'demo@demo.com', password: 'Demo@123' },
-    { email: 'test@test.com', password: 'Test@123' },
-    { email: 'admin@fitorbit.com', password: 'Fitorbit@2026' }
-  ];
-
   const validateForm = () => {
     const newErrors = {};
     
@@ -73,36 +63,56 @@ const Login = () => {
     
     setIsLoading(true);
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Check if credentials are valid
-    const isValid = validCredentials.some(
-      cred => 
-        cred.email === formData.username && 
-        cred.password === formData.password
-    );
-    
-    if (isValid) {
-      // Store login state in localStorage if "Remember me" is checked
-      if (rememberMe) {
-        localStorage.setItem('Fitorbit_remembered', JSON.stringify({
-          username: formData.username,
-          remember: true
-        }));
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.username,
+          password: formData.password
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        const token = data.token;
+        const user = data.user;
+        
+        // Store login state in localStorage if "Remember me" is checked
+        if (rememberMe) {
+          localStorage.setItem('Fitorbit_remembered', JSON.stringify({
+            username: user.email,
+            remember: true
+          }));
+        } else {
+          localStorage.removeItem('Fitorbit_remembered');
+        }
+        
+        // Store session token and user
+        sessionStorage.setItem('Fitorbit_token', token);
+        sessionStorage.setItem('Fitorbit_user', user.email);
+        
+        // Navigate based on role
+        if (user.role === 'GYM_OWNER') {
+          navigate('/ultimate-control');
+        } else if (user.role === 'SUPER_ADMIN') {
+          navigate('/admin-control');
+        } else {
+          // Default navigation for other roles
+          navigate('/ultimate-control');
+        }
       } else {
-        localStorage.removeItem('Fitorbit_remembered');
+        setErrors({
+          general: data.message || 'Invalid email or password. Please try again.'
+        });
       }
-      
-      // Store session token
-      sessionStorage.setItem('Fitorbit_token', 'authenticated_' + Date.now());
-      sessionStorage.setItem('Fitorbit_user', formData.username);
-      
-      // Redirect to ultimate-control route
-      navigate('/ultimate-control');
-    } else {
+    } catch (error) {
+      console.error('Login error:', error);
       setErrors({
-        general: 'Invalid email or password. Please try again.'
+        general: 'Network error. Please check your connection and try again.'
       });
     }
     

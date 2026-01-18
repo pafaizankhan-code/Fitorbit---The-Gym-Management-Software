@@ -9,7 +9,7 @@ import {
   Bot,
   Phone,
   Calendar,
-  DollarSign,
+  IndianRupee,
   Users,
   FileText,
   HelpCircle,
@@ -96,7 +96,7 @@ const FitOrbitChatbot = () => {
       id: 2,
       title: 'Pricing Plans',
       description: 'See our pricing options',
-      icon: <DollarSign size={18} />,
+      icon: <IndianRupee size={18} />,
       color: 'bg-green-100 text-green-600'
     },
     {
@@ -123,7 +123,7 @@ const FitOrbitChatbot = () => {
     },
     {
       name: 'Financial Tools',
-      icon: <DollarSign size={20} />,
+      icon: <IndianRupee size={20} />,
       features: ['Automated Billing', 'Payment Processing', 'Revenue Reports', 'Expense Tracking']
     },
     {

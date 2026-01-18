@@ -14,6 +14,7 @@ import {
   HelpCircle,
   CreditCard
 } from 'lucide-react';
+import ScrollToTop from '../../Components/ScrollToTop';
 
 const VendorDashboard = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -94,6 +95,8 @@ const VendorDashboard = () => {
   ];
 
   return (
+
+   
     <div className="flex h-screen bg-neutral-50 overflow-hidden">
       {/* Desktop Sidebar - Always visible on desktop */}
       {!isMobile && (
@@ -115,6 +118,7 @@ const VendorDashboard = () => {
         />
       )}
 
+ <ScrollToTop/>
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Enhanced Header - Mobile Responsive */}

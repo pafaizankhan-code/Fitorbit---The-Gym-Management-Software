@@ -23,6 +23,7 @@ import {
   Plus,
   Bot
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Banner = () => {
   return (
@@ -182,20 +183,40 @@ const Banner = () => {
 
         {/* Bottom Section with Grid Pattern */}
         <div className="relative">
-          <div className="absolute inset opacity-10 rounded-lg" />
-          
-          {/* CTA Buttons Container */}
-          <div className="relative z-10 flex flex-col xs:flex-row gap-3 sm:gap-4">
-            <button className="px-4 sm:px-6 md:px-8 py-3 sm:py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors flex items-center justify-center border-2 border-blue-600 shadow-sm hover:shadow-md text-sm sm:text-base">
-              <span>Start Free 14-Day Trial</span>
-              <ArrowRight size={16} sm:size={18} className="ml-2 sm:ml-3" />
-            </button>
-            <button className="px-4 sm:px-6 md:px-8 py-3 sm:py-4 bg-white text-blue-600 font-bold rounded-lg border-2 border-blue-600 hover:bg-blue-50 transition-colors flex items-center justify-center hover:border-blue-700 text-sm sm:text-base">
-              <Play size={16} sm:size={18} className="mr-2 sm:mr-3" />
-              <span>Watch Product Tour</span>
-            </button>
-          </div>
-        </div>
+  <div className="absolute inset-0 opacity-10 rounded-lg" />
+
+  {/* CTA Buttons Container */}
+  <div className="relative z-10 flex flex-col md:flex-row gap-3 sm:gap-4 items-stretch md:items-start">
+    
+    {/* Button 1 */}
+  <Link to={'/book-demo'}>
+    <button
+      className="
+      cursor-pointer
+        w-full md:w-auto
+        px-4 sm:px-6 md:px-8
+        py-3 sm:py-4
+        bg-blue-600 hover:bg-blue-700
+        text-white font-bold
+        rounded-lg
+        transition-colors
+        flex items-center justify-center
+        border-2 border-blue-600
+        shadow-sm hover:shadow-md
+        text-sm sm:text-base
+      "
+    >
+      <span>Start Free 14-Day Trial</span>
+      <ArrowRight size={16} className="ml-2 sm:ml-3" />
+    </button>
+
+  </Link>
+    {/* Button 2 */}
+   
+
+  </div>
+</div>
+
       </div>
 
       {/* Bottom Divider with Grid Pattern */}

@@ -139,10 +139,6 @@ const Settings = () => {
     { id: 'general', label: 'General', mobileLabel: 'General', icon: SettingsIcon },
     { id: 'notifications', label: 'Notifications', mobileLabel: 'Notify', icon: Bell },
     { id: 'security', label: 'Security', mobileLabel: 'Security', icon: Shield },
-    { id: 'users', label: 'Users & Roles', mobileLabel: 'Users', icon: Users },
-    { id: 'billing', label: 'Billing', mobileLabel: 'Billing', icon: CreditCard },
-    { id: 'appearance', label: 'Appearance', mobileLabel: 'Theme', icon: Palette },
-    { id: 'integrations', label: 'Integrations', mobileLabel: 'Apps', icon: Code },
     { id: 'backup', label: 'Backup & Restore', mobileLabel: 'Backup', icon: Database },
     { id: 'system', label: 'System', mobileLabel: 'System', icon: Cpu }
   ];
@@ -664,7 +660,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 ">
+    <div className="min-h-screen bg-gray-50 md:p-3 p-1 ">
       {/* Mobile Sidebar Toggle */}
       {isMobile && (
         <div className="mb-4">

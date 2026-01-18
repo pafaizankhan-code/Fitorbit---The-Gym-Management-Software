@@ -1,31 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
-  Search,
   Home,
   Users,
+  CreditCard,
   Calendar,
-  BarChart,
+  IndianRupee,
+  UserCheck,
+  ReceiptIndianRupee,
   Settings,
   Bell,
   Package,
-  UserCheck,
   ChevronDown,
   ChevronRight,
   User,
-  Database,
-  Shield,
-  HelpCircle,
-  IndianRupee,
-  Trophy,
-  Dumbbell,
-  CreditCard,
-  Clock,
+  FileText,
+  AlertCircle,
   TrendingUp,
-  FileBarChart,
   Activity,
   Menu,
-  X
+  X,
+  Search,
+  BarChart,
+  Receipt,
+  Users as UsersIcon,
+  FileBarChart,
+  Zap,
+  ReceiptIndianRupee as MoneyIcon,
+  UserPlus,
+  Shield,
+  HelpCircle,
+  Database,
+  Dumbbell,  // For Workout
+  Apple      // ← Added for Diet
 } from 'lucide-react';
 
 const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
@@ -33,10 +40,19 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
   const location = useLocation();
   
   const [expandedSections, setExpandedSections] = useState({
-    members: true,
-    finance: false,
-    operations: false,
-    reports: false
+    dashboard: true,
+    leads: false,
+    diet: false,        // ← Separated: Diet (default expanded)
+    workout: false,     // ← Separated: Workout (default expanded)
+    members: false,
+    membership: false,
+    attendance: false,
+    payments: false,
+    finance: false,     // ← New for Finance Management
+    staff: false,
+    expenses: false,
+    reports: false,
+    notifications: false
   });
 
   const toggleSection = (section) => {
@@ -49,41 +65,112 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
   // Helper function to check active route
   const isActive = (path) => location.pathname === `/ultimate-control/${path}`;
 
-  // Main menu items (with paths)
-  const mainMenu = [
-    { id: 'dashboard', label: 'Dashboard', icon: Home, path: '', count: null },
+  // Dashboard Submenu
+  const dashboardItems = [
+    { id: 'dashboard_main', label: 'Dashboard Overview', path: '', count: null },
   ];
 
+  // Leads Management
+  const leadsManagement = [
+    { id: 'all_leads', label: 'All Leads', path: 'leads/all', count: 150 },
+    { id: 'add_lead', label: 'Add New Lead', path: 'leads/add', count: null },
+  ];
+
+  // ← Separated: Diet Management
+  const dietManagement = [
+    { id: 'diet_plans', label: 'Diet Plans', path: 'diet-workout/diet-plans', count: 23 },
+    { id: 'add_diet', label: 'Create Diet Plan', path: 'diet-workout/add-diet', count: null },
+  ];
+
+  // ← Separated: Workout Management
+  const workoutManagement = [
+    { id: 'workout_plans', label: 'Workout Plans', path: 'diet-workout/workout-plans', count: 45 },
+    { id: 'add_workout', label: 'Create Workout Plan', path: 'diet-workout/add-workout', count: null },
+  ];
+
+  // ← New: Finance Management
+  const financeManagement = [
+    { id: 'manage_invoice', label: 'Manage Invoice', path: 'finance/invoices', count: null },
+    { id: 'add_invoices', label: 'Create Invoice', path: 'finance/add-invoices', count: null },
+  ];
+
+  // Member Management
   const memberManagement = [
     { id: 'all_members', label: 'All Members', path: 'members', count: 427 },
-    // { id: 'new_members', label: 'New Members', path: 'members/new', count: 24 },
-    // { id: 'active_members', label: 'Active Members', path: 'members/active', count: 398 },
-    // { id: 'renewals', label: 'Renewals Due', path: 'members/renewals', count: 32 },
+    { id: 'add_member', label: 'Add New Member', path: 'members/add', count: null },
   ];
 
-  const financeManagement = [
-    { id: 'payments', label: 'All Payments', icon: IndianRupee, path: 'finance/payments', count: '₹4.8L' },
-    { id: 'subscriptions', label: 'Subscriptions', icon: CreditCard, path: 'finance/subscriptions', count: 412 },
+  // Membership & Plans
+  const membershipPlans = [
+    { id: 'all_plans', label: 'All Plans', path: 'memberships/plans', count: 15 },
+    { id: 'create_plan', label: 'Create New Plan', path: 'memberships/create', count: null },
+    // { id: 'offers', label: 'Discounts & Offers', path: 'memberships/offers', count: 3 },
   ];
 
-  const operations = [
-    { id: 'schedule', label: 'Class Schedule', icon: Calendar, path: 'operations/schedule' },
-    { id: 'trainers', label: 'Trainers', icon: UserCheck, path: 'operations/trainers' },
-    { id: 'workouts', label: 'Workout Plans', icon: Dumbbell, path: 'operations/workouts' },
+  // Attendance Management
+  const attendanceManagement = [
+    { id: 'today_attendance', label: "Today's Attendance", path: 'attendance/today', count: '128/427' },
+    // { id: 'manual_entry', label: 'Manual Entry', path: 'attendance/manual', count: null },
+    // { id: 'qr_scanner', label: 'QR Scanner', path: 'attendance/qr', count: null },
+    // { id: 'attendance_reports', label: 'Attendance Reports', path: 'attendance/reports', count: null },
+    // { id: 'absent_list', label: 'Absent Members', path: 'attendance/absent', count: 12 },
   ];
 
-  const reports = [
-    { id: 'financial', label: 'Financial Reports', icon: FileBarChart, path: 'reports/financial' },
-    { id: 'attendance', label: 'Attendance', icon: Activity, path: 'reports/attendance' },
-    { id: 'performance', label: 'Gym Performance', icon: Trophy, path: 'reports/performance' },
-    // { id: 'member_growth', label: 'Member Growth', icon: TrendingUp, path: 'reports/member-growth' },
+  // Payments & Billing
+  const paymentsBilling = [
+    // { id: 'collect_payment', label: 'Collect Payment', path: 'payments/collect', count: null },
+    // { id: 'pending_payments', label: 'Pending Dues', path: 'payments/pending', count: 32 },
+    // { id: 'payment_history', label: 'Payment History', path: 'payments/history', count: '₹4.8L' },
+    // { id: 'invoices', label: 'Invoices', path: 'payments/invoices', count: 412 },
+    // { id: 'partial_payments', label: 'Partial Payments', path: 'payments/partial', count: 18 },
   ];
 
+  // Staff/Trainer Management
+  const staffManagement = [
+    { id: 'all_staff', label: 'All Staff', path: 'staff/all', count: 12 },
+    { id: 'add_staff', label: 'Add Staff', path: 'staff/add', count: null },
+    // { id: 'trainers', label: 'Trainers', path: 'staff/trainers', count: 6 },
+    // { id: 'receptionists', label: 'Receptionists', path: 'staff/reception', count: 3 },
+    { id: 'permissions', label: 'Role Permissions', path: 'staff/permissions', count: null },
+    { id: 'salary', label: 'Salary Setup', path: 'staff/salary', count: null },
+  ];
+
+  // Expense Management
+  const expenseManagement = [
+    { id: 'manage_expense', label: 'Manage Expense', path: 'expenses/manage_expense', count: null },
+    { id: 'add_expense', label: 'Add Expense', path: 'expenses/add', count: null },
+    // { id: 'expense_types', label: 'Expense Types', path: 'expenses/types', count: 8 },
+    // { id: 'monthly_expenses', label: 'Monthly Expenses', path: 'expenses/monthly', count: '₹1.2L' },
+    // { id: 'rent_utilities', label: 'Rent & Utilities', path: 'expenses/rent', count: null },
+    // { id: 'equipment', label: 'Equipment', path: 'expenses/equipment', count: null },
+    // { id: 'profit_loss', label: 'Profit & Loss', path: 'expenses/profit-loss', count: null },
+  ];
+
+  // Reports & Analytics
+  const reportsAnalytics = [
+    { id: 'financial_reports', label: 'Financial Reports', path: 'reports/financial', count: null },
+    { id: 'attendance_reports', label: 'Attendance Reports', path: 'reports/attendance', count: null },
+    { id: 'member_reports', label: 'Member Reports', path: 'reports/members', count: null },
+    { id: 'expiry_reports', label: 'Expiry Reports', path: 'reports/expiry', count: 29 },
+    { id: 'revenue_graph', label: 'Revenue Graph', path: 'reports/revenue', count: null },
+    { id: 'export_reports', label: 'Export Reports', path: 'reports/export', count: null },
+  ];
+
+  // Notifications & Reminders
+  const notifications = [
+    { id: 'all_notifications', label: 'All Notifications', path: 'notifications/all', count: 24 },
+    // { id: 'expiry_reminders', label: 'Expiry Reminders', path: 'notifications/expiry', count: 18 },
+    // { id: 'payment_reminders', label: 'Payment Reminders', path: 'notifications/payment', count: 32 },
+    // { id: 'broadcast', label: 'Broadcast Messages', path: 'notifications/broadcast', count: null },
+    // { id: 'whatsapp_sms', label: 'WhatsApp/SMS Setup', path: 'notifications/setup', count: null },
+  ];
+
+  // System
   const system = [
     { id: 'settings', label: 'Settings', icon: Settings, path: 'settings' },
-    { id: 'database', label: 'Database', icon: Database, path: 'database' },
-    { id: 'security', label: 'Security', icon: Shield, path: 'security' },
-    { id: 'help', label: 'Help', icon: HelpCircle, path: 'help' },
+    // { id: 'database', label: 'Database Backup', icon: Database, path: 'database' },
+    // { id: 'security', label: 'Security', icon: Shield, path: 'security' },
+    { id: 'help', label: 'Help & Support', icon: HelpCircle, path: 'help' },
   ];
 
   // Handle navigation
@@ -120,7 +207,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
           <div className="p-4 border-b border-gray-300 flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div>
-                <h1 className="text-lg font-bold text-black">FitOrbit</h1>
+                <h1 className="text-lg font-bold text-black">Your Gym Name</h1>
                 <p className="text-xs text-gray-600">Management System</p>
               </div>
             </div>
@@ -139,7 +226,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
                 <div>
-                  <h1 className="text-lg font-bold text-black">FitOrbit</h1>
+                  <h1 className="text-lg font-bold text-black">Your Gym Name </h1>
                   <p className="text-xs text-gray-600">Management System</p>
                 </div>
               </div>
@@ -175,52 +262,181 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
             }
           `}</style>
           
-          {/* Main Menu */}
+          {/* 1️⃣ Dashboard Section */}
           <div className="mb-3">
-            <div className="px-5 mb-3">
-              <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">MAIN</h3>
-            </div>
-            <div className="space-y-1">
-              {mainMenu.map(item => (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavigation(item.path)}
-                  className={`w-full flex items-center px-5 py-3 ${isMobile ? 'py-2.5' : 'py-2.5'} text-left ${
-                    (item.path === '' && location.pathname === '/ultimate-control') || 
-                    (item.path && isActive(item.path))
-                      ? 'bg-blue-600 text-white' 
-                      : 'hover:bg-gray-100 text-black'
-                  }`}
-                >
-                  <item.icon className={`${isMobile ? 'w-4 h-4' : 'w-4 h-4'} mr-3 ${
-                    (item.path === '' && location.pathname === '/ultimate-control') || 
-                    (item.path && isActive(item.path)) 
-                      ? 'text-white' : 'text-blue-600'
-                  }`} />
-                  <span className={`${isMobile ? 'text-sm' : 'text-sm'} font-medium`}>{item.label}</span>
-                  {item.count && (
-                    <span className={`ml-auto ${isMobile ? 'text-xs' : 'text-xs'} px-2 py-0.5 rounded ${
-                      (item.path === '' && location.pathname === '/ultimate-control') || 
+            <button
+              onClick={() => toggleSection('dashboard')}
+              className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
+            >
+              <div className="flex items-center">
+                <Home className="w-4 h-4 mr-3 text-blue-600" />
+                <span className="text-sm font-medium text-black">Dashboard</span>
+              </div>
+              {expandedSections.dashboard ? (
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-500" />
+              )}
+            </button>
+            
+            {expandedSections.dashboard && (
+              <div className="mt-1 space-y-0.5">
+                {dashboardItems.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavigation(item.path)}
+                    className={`w-full flex items-center justify-between px-5 pl-10 py-2 text-left ${
+                      (item.path === '' && location.pathname === '/ultimate-control') ||
                       (item.path && isActive(item.path))
-                        ? 'bg-white text-blue-600' 
-                        : 'bg-blue-100 text-blue-600'
+                        ? 'bg-blue-50 border-r-4 border-blue-600' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className={`text-sm ${
+                      (item.path === '' && location.pathname === '/ultimate-control') ||
+                      (item.path && isActive(item.path)) 
+                        ? 'text-blue-600 font-medium' : 'text-gray-700'
                     }`}>
-                      {item.count}
+                      {item.label}
                     </span>
-                  )}
-                </button>
-              ))}
-            </div>
+                  
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Member Management */}
+          {/* 2️⃣ Leads Management */}
+          <div className="mb-3">
+            <button
+              onClick={() => toggleSection('leads')}
+              className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
+            >
+              <div className="flex items-center">
+                <UserPlus className="w-4 h-4 mr-3 text-blue-600" />
+                <span className="text-sm font-medium text-black">Leads Management</span>
+              </div>
+              {expandedSections.leads ? (
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-500" />
+              )}
+            </button>
+            
+            {expandedSections.leads && (
+              <div className="mt-1 space-y-0.5">
+                {leadsManagement.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavigation(item.path)}
+                    className={`w-full flex items-center justify-between px-5 pl-10 py-2 text-left ${
+                      isActive(item.path)
+                        ? 'bg-blue-50 border-r-4 border-blue-600' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className={`text-sm ${
+                      isActive(item.path) ? 'text-blue-600 font-medium' : 'text-gray-700'
+                    }`}>
+                      {item.label}
+                    </span>
+                
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* ← Separated: 3️⃣ Diet Management */}
+          <div className="mb-3">
+            <button
+              onClick={() => toggleSection('diet')}
+              className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
+            >
+              <div className="flex items-center">
+                <Apple className="w-4 h-4 mr-3 text-blue-600" />
+                <span className="text-sm font-medium text-black">Diet Management</span>
+              </div>
+              {expandedSections.diet ? (
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-500" />
+              )}
+            </button>
+            
+            {expandedSections.diet && (
+              <div className="mt-1 space-y-0.5">
+                {dietManagement.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavigation(item.path)}
+                    className={`w-full flex items-center justify-between px-5 pl-10 py-2 text-left ${
+                      isActive(item.path)
+                        ? 'bg-blue-50 border-r-4 border-blue-600' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className={`text-sm ${
+                      isActive(item.path) ? 'text-blue-600 font-medium' : 'text-gray-700'
+                    }`}>
+                      {item.label}
+                    </span>
+                
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* ← Separated: 4️⃣ Workout Management */}
+          <div className="mb-3">
+            <button
+              onClick={() => toggleSection('workout')}
+              className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
+            >
+              <div className="flex items-center">
+                <Dumbbell className="w-4 h-4 mr-3 text-blue-600" />
+                <span className="text-sm font-medium text-black">Workout Management</span>
+              </div>
+              {expandedSections.workout ? (
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-500" />
+              )}
+            </button>
+            
+            {expandedSections.workout && (
+              <div className="mt-1 space-y-0.5">
+                {workoutManagement.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavigation(item.path)}
+                    className={`w-full flex items-center justify-between px-5 pl-10 py-2 text-left ${
+                      isActive(item.path)
+                        ? 'bg-blue-50 border-r-4 border-blue-600' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className={`text-sm ${
+                      isActive(item.path) ? 'text-blue-600 font-medium' : 'text-gray-700'
+                    }`}>
+                      {item.label}
+                    </span>
+                
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 5️⃣ Member Management */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('members')}
               className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
             >
               <div className="flex items-center">
-                <Users className="w-4 h-4 mr-3 text-blue-600" />
+                <UsersIcon className="w-4 h-4 mr-3 text-blue-600" />
                 <span className="text-sm font-medium text-black">Member Management</span>
               </div>
               {expandedSections.members ? (
@@ -247,30 +463,106 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                     }`}>
                       {item.label}
                     </span>
-                    {item.count && (
-                      <span className={`text-xs px-1.5 py-0.5 rounded ${
-                        isActive(item.path)
-                          ? 'bg-blue-100 text-blue-600' 
-                          : 'bg-gray-100 text-gray-600'
-                      }`}>
-                        {item.count}
-                      </span>
-                    )}
+                
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Finance Management */}
+          {/* 6️⃣ Membership & Plans */}
+          <div className="mb-3">
+            <button
+              onClick={() => toggleSection('membership')}
+              className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
+            >
+              <div className="flex items-center">
+                <CreditCard className="w-4 h-4 mr-3 text-blue-600" />
+                <span className="text-sm font-medium text-black">Membership & Plans</span>
+              </div>
+              {expandedSections.membership ? (
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-500" />
+              )}
+            </button>
+            
+            {expandedSections.membership && (
+              <div className="mt-1 space-y-0.5">
+                {membershipPlans.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavigation(item.path)}
+                    className={`w-full flex items-center justify-between px-5 pl-10 py-2 text-left ${
+                      isActive(item.path)
+                        ? 'bg-blue-50 border-r-4 border-blue-600' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className={`text-sm ${
+                      isActive(item.path) ? 'text-blue-600 font-medium' : 'text-gray-700'
+                    }`}>
+                      {item.label}
+                    </span>
+                
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 7️⃣ Attendance Management */}
+          <div className="mb-3">
+            <button
+              onClick={() => toggleSection('attendance')}
+              className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
+            >
+              <div className="flex items-center">
+                <Calendar className="w-4 h-4 mr-3 text-blue-600" />
+                <span className="text-sm font-medium text-black">Attendance</span>
+              </div>
+              {expandedSections.attendance ? (
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-500" />
+              )}
+            </button>
+            
+            {expandedSections.attendance && (
+              <div className="mt-1 space-y-0.5">
+                {attendanceManagement.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavigation(item.path)}
+                    className={`w-full flex items-center justify-between px-5 pl-10 py-2 text-left ${
+                      isActive(item.path)
+                        ? 'bg-blue-50 border-r-4 border-blue-600' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className={`text-sm ${
+                      isActive(item.path) ? 'text-blue-600 font-medium' : 'text-gray-700'
+                    }`}>
+                      {item.label}
+                    </span>
+                
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+       
+
+          {/* ← New: 9️⃣ Finance Management */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('finance')}
               className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
             >
               <div className="flex items-center">
-                <IndianRupee className="w-4 h-4 mr-3 text-blue-600" />
-                <span className="text-sm font-medium text-black">Finance</span>
+                <ReceiptIndianRupee className="w-4 h-4 mr-3 text-blue-600" />
+                <span className="text-sm font-medium text-black">Finance Management</span>
               </div>
               {expandedSections.finance ? (
                 <ChevronDown className="w-4 h-4 text-gray-500" />
@@ -291,71 +583,101 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                         : 'hover:bg-gray-50'
                     }`}
                   >
-                    <div className="flex items-center">
-                      <item.icon className="w-3.5 h-3.5 mr-3 text-gray-600" />
-                      <span className={`text-sm ${
-                        isActive(item.path) ? 'text-blue-600 font-medium' : 'text-gray-700'
-                      }`}>
-                        {item.label}
-                      </span>
-                    </div>
-                    {item.count && (
-                      <span className={`text-xs px-1.5 py-0.5 rounded ${
-                        isActive(item.path)
-                          ? 'bg-blue-100 text-blue-600' 
-                          : 'bg-gray-100 text-gray-600'
-                      }`}>
-                        {item.count}
-                      </span>
-                    )}
+                    <span className={`text-sm ${
+                      isActive(item.path) ? 'text-blue-600 font-medium' : 'text-gray-700'
+                    }`}>
+                      {item.label}
+                    </span>
+                
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Operations */}
+          {/* 🔟 Staff/Trainer Management */}
           <div className="mb-3">
             <button
-              onClick={() => toggleSection('operations')}
+              onClick={() => toggleSection('staff')}
               className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
             >
               <div className="flex items-center">
-                <Calendar className="w-4 h-4 mr-3 text-blue-600" />
-                <span className="text-sm font-medium text-black">Operations</span>
+                <UserCheck className="w-4 h-4 mr-3 text-blue-600" />
+                <span className="text-sm font-medium text-black">Staff & Trainers</span>
               </div>
-              {expandedSections.operations ? (
+              {expandedSections.staff ? (
                 <ChevronDown className="w-4 h-4 text-gray-500" />
               ) : (
                 <ChevronRight className="w-4 h-4 text-gray-500" />
               )}
             </button>
             
-            {expandedSections.operations && (
+            {expandedSections.staff && (
               <div className="mt-1 space-y-0.5">
-                {operations.map(item => (
+                {staffManagement.map(item => (
                   <button
                     key={item.id}
                     onClick={() => handleNavigation(item.path)}
-                    className={`w-full flex items-center px-5 pl-10 py-2 text-left ${
+                    className={`w-full flex items-center justify-between px-5 pl-10 py-2 text-left ${
                       isActive(item.path)
                         ? 'bg-blue-50 border-r-4 border-blue-600' 
                         : 'hover:bg-gray-50'
                     }`}
                   >
-                    <item.icon className="w-3.5 h-3.5 mr-3 text-gray-600" />
                     <span className={`text-sm ${
                       isActive(item.path) ? 'text-blue-600 font-medium' : 'text-gray-700'
                     }`}>
                       {item.label}
                     </span>
+                
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Reports */}
+          {/* 1️⃣1️⃣ Expense Management */}
+          <div className="mb-3">
+            <button
+              onClick={() => toggleSection('expenses')}
+              className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
+            >
+              <div className="flex items-center">
+                <ReceiptIndianRupee className="w-4 h-4 mr-3 text-blue-600" />
+                <span className="text-sm font-medium text-black">Expense Management</span>
+              </div>
+              {expandedSections.expenses ? (
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-500" />
+              )}
+            </button>
+            
+            {expandedSections.expenses && (
+              <div className="mt-1 space-y-0.5">
+                {expenseManagement.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavigation(item.path)}
+                    className={`w-full flex items-center justify-between px-5 pl-10 py-2 text-left ${
+                      isActive(item.path)
+                        ? 'bg-blue-50 border-r-4 border-blue-600' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className={`text-sm ${
+                      isActive(item.path) ? 'text-blue-600 font-medium' : 'text-gray-700'
+                    }`}>
+                      {item.label}
+                    </span>
+                
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 1️⃣2️⃣ Reports & Analytics */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('reports')}
@@ -363,7 +685,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
             >
               <div className="flex items-center">
                 <BarChart className="w-4 h-4 mr-3 text-blue-600" />
-                <span className="text-sm font-medium text-black">Reports</span>
+                <span className="text-sm font-medium text-black">Reports & Analytics</span>
               </div>
               {expandedSections.reports ? (
                 <ChevronDown className="w-4 h-4 text-gray-500" />
@@ -374,22 +696,63 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
             
             {expandedSections.reports && (
               <div className="mt-1 space-y-0.5">
-                {reports.map(item => (
+                {reportsAnalytics.map(item => (
                   <button
                     key={item.id}
                     onClick={() => handleNavigation(item.path)}
-                    className={`w-full flex items-center px-5 pl-10 py-2 text-left ${
+                    className={`w-full flex items-center justify-between px-5 pl-10 py-2 text-left ${
                       isActive(item.path)
                         ? 'bg-blue-50 border-r-4 border-blue-600' 
                         : 'hover:bg-gray-50'
                     }`}
                   >
-                    <item.icon className="w-3.5 h-3.5 mr-3 text-gray-600" />
                     <span className={`text-sm ${
                       isActive(item.path) ? 'text-blue-600 font-medium' : 'text-gray-700'
                     }`}>
                       {item.label}
                     </span>
+                
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 1️⃣3️⃣ Notifications & Reminders */}
+          <div className="mb-3">
+            <button
+              onClick={() => toggleSection('notifications')}
+              className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
+            >
+              <div className="flex items-center">
+                <Bell className="w-4 h-4 mr-3 text-blue-600" />
+                <span className="text-sm font-medium text-black">Notifications</span>
+              </div>
+              {expandedSections.notifications ? (
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-500" />
+              )}
+            </button>
+            
+            {expandedSections.notifications && (
+              <div className="mt-1 space-y-0.5">
+                {notifications.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavigation(item.path)}
+                    className={`w-full flex items-center justify-between px-5 pl-10 py-2 text-left ${
+                      isActive(item.path)
+                        ? 'bg-blue-50 border-r-4 border-blue-600' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className={`text-sm ${
+                      isActive(item.path) ? 'text-blue-600 font-medium' : 'text-gray-700'
+                    }`}>
+                      {item.label}
+                    </span>
+                
                   </button>
                 ))}
               </div>
@@ -412,8 +775,10 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                       : 'hover:bg-gray-100 text-black'
                   }`}
                 >
-                  <item.icon className="w-4 h-4 mr-3 text-blue-600" />
-                  <span className="text-sm font-medium">{item.label}</span>
+                  <item.icon className={`w-4 h-4 mr-3 ${isActive(item.path) ? 'text-white' : 'text-blue-600'}`} />
+                  <span className={`text-sm font-medium ${isActive(item.path) ? 'text-white' : 'text-black'}`}>
+                    {item.label}
+                  </span>
                 </button>
               ))}
             </div>

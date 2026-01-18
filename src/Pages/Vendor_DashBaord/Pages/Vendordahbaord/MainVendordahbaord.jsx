@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Users,
   IndianRupee,
@@ -54,13 +54,23 @@ import {
   Cpu,
   Network,
   Cloud,
-  HardDrive
+  HardDrive,
+  X
 } from 'lucide-react';
+
+// Import your components (adjust paths as needed)
+// import AddInvoice // Adjust this path
+import AddInvoice from '../ManageInvoice/Addinvoices/Addinvoices';
+import AddNewLeads from '../AllLeads/AddNewLeads/AddNewLeads';
+// import AddNewLeads from '.'; // Adjust this path
 
 const MainVendordahbaord = () => {
   const [timeRange, setTimeRange] = useState('thisMonth');
   const [activeView, setActiveView] = useState('overview');
   const [selectedMetrics, setSelectedMetrics] = useState(['revenue', 'members', 'attendance']);
+  const [isSliderOpen, setIsSliderOpen] = useState(false);
+  const [activeComponent, setActiveComponent] = useState(null);
+  const sliderRef = useRef(null);
 
   // Dashboard Statistics
   const dashboardStats = {
@@ -145,6 +155,76 @@ const MainVendordahbaord = () => {
     { service: 'API', status: 'warning', uptime: '98.5%', icon: Server }
   ];
 
+  // Handle click outside slider
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sliderRef.current && !sliderRef.current.contains(event.target) && 
+          !event.target.closest('.open-slider-btn')) {
+        closeSlider();
+      }
+    };
+
+    if (isSliderOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSliderOpen]);
+
+  // Open slider with specific component
+  const openSlider = (component) => {
+    setActiveComponent(component);
+    setIsSliderOpen(true);
+    // Prevent body scroll when slider is open
+    document.body.style.overflow = 'hidden';
+  };
+
+  // Close slider
+  const closeSlider = () => {
+    setIsSliderOpen(false);
+    setActiveComponent(null);
+    // Restore body scroll
+    document.body.style.overflow = 'auto';
+  };
+
+  // Render component based on activeComponent state
+  const renderComponent = () => {
+    switch (activeComponent) {
+      case 'invoice':
+        return <AddInvoice onClose={closeSlider} />;
+      case 'leads':
+        return <AddNewLeads onClose={closeSlider} />;
+      default:
+        return null;
+    }
+  };
+
+  // Get slider title
+  const getSliderTitle = () => {
+    switch (activeComponent) {
+      case 'invoice':
+        return 'Create New Invoice';
+      case 'leads':
+        return 'Add New Lead';
+      default:
+        return '';
+    }
+  };
+
+  // Get slider icon
+  const getSliderIcon = () => {
+    switch (activeComponent) {
+      case 'invoice':
+        return FileText;
+      case 'leads':
+        return Users;
+      default:
+        return FileText;
+    }
+  };
+
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -191,13 +271,13 @@ const MainVendordahbaord = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 ">
+    <div className="min-h-screen bg-gray-50 relative">
       {/* Header */}
       <div className="bg-white rounded-2xl border border-gray-200 p-4 md:p-6 mb-4 md:mb-6">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4 md:mb-6">
+          {/* Left side - Title & subtitle */}
           <div className="mb-4 lg:mb-0">
             <div className="flex items-center mb-2">
-             
               <div>
                 <h1 className="text-xl md:text-2xl font-bold text-black">FitOrbit Dashboard</h1>
                 <p className="text-gray-600 text-sm md:text-base">Fitness Empire • Mumbai Central</p>
@@ -205,18 +285,24 @@ const MainVendordahbaord = () => {
             </div>
           </div>
 
+          {/* Right side - Action buttons */}
           <div className="flex flex-wrap gap-2 md:gap-3">
-            <button className="flex items-center space-x-2 bg-blue-600 text-white px-3 py-2 md:px-4 md:py-2.5 rounded-lg hover:bg-blue-700 transition-colors text-sm">
-              <Plus className="w-4 h-4" />
-              <span className="font-medium">Quick Action</span>
+            {/* Create Invoice Button */}
+            <button 
+              onClick={() => openSlider('invoice')}
+              className="open-slider-btn inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 transition font-medium text-sm md:text-base shadow-sm"
+            >
+              <FileText className="w-4 h-4 mr-2" />
+              Create Invoice
             </button>
-            <button className="flex items-center space-x-2 bg-white border border-gray-300 text-gray-700 px-3 py-2 md:px-4 md:py-2.5 rounded-lg hover:bg-gray-50 transition-colors text-sm">
-              <Download className="w-4 h-4" />
-              <span className="font-medium">Export</span>
-            </button>
-            <button className="flex items-center space-x-2 bg-white border border-gray-300 text-gray-700 px-3 py-2 md:px-4 md:py-2.5 rounded-lg hover:bg-gray-50 transition-colors text-sm">
-              <Printer className="w-4 h-4" />
-              <span className="font-medium">Print</span>
+
+            {/* Add Lead Button */}
+            <button 
+              onClick={() => openSlider('leads')}
+              className="open-slider-btn inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 transition font-medium text-sm md:text-base shadow-sm"
+            >
+              <Users className="w-4 h-4 mr-2" />
+              Add Lead
             </button>
           </div>
         </div>
@@ -664,6 +750,74 @@ const MainVendordahbaord = () => {
           </div>
         </div>
       </div>
+
+      {/* Right Slider Overlay */}
+{isSliderOpen && (
+  <div
+    className="
+      fixed inset-0 
+      bg-black bg-opacity-20 
+      z-50 
+      transition-opacity 
+      duration-500 
+      ease-out
+    "
+  >
+    <div
+      ref={sliderRef}
+      className={`
+        fixed inset-y-0 right-0
+        w-full sm:w-5/6 md:w-4/5 lg:w-3/4 xl:w-[70%] 2xl:w-[65%]
+        bg-white shadow-2xl
+        transform transition-transform
+        duration-500 ease-out
+        ${isSliderOpen ? 'translate-x-0' : 'translate-x-full'}
+      `}
+    >
+      {/* Header - Sticky */}
+      <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-neutral-200 bg-white sticky top-0 z-10">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-blue-50">
+            {(() => {
+              const Icon = getSliderIcon();
+              return <Icon className="w-5 h-5 text-blue-600" />;
+            })()}
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">
+              {getSliderTitle()}
+            </h2>
+            <p className="text-sm text-gray-500 mt-0.5">
+              {activeComponent === 'invoice'
+                ? 'Create and send new invoice'
+                : 'Add new lead to the system'}
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={closeSlider}
+          className="
+            p-2 rounded-full 
+            hover:bg-neutral-100 
+            active:bg-neutral-200 
+            transition-colors duration-200
+          "
+          aria-label="Close slider"
+        >
+          <X className="w-5 h-5 text-gray-600" />
+        </button>
+      </div>
+
+      {/* Scrollable Content Area */}
+      <div className="h-[calc(100vh-64px)] overflow-y-auto overscroll-contain">
+        <div className="md:p-3 p-1">
+          {renderComponent()}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };

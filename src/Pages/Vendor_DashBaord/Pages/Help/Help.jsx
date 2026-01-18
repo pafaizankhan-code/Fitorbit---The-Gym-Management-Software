@@ -239,7 +239,7 @@ const Help = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-sm sm:text-base">
+    <div className="min-h-screen bg-gray-50 text-sm sm:text-base md:p-3 p-1">
       {/* Header */}
       <div className="bg-white rounded-2xl border border-gray-200 p-4 sm:p-6 mb-4 sm:mb-6">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4 sm:mb-6">

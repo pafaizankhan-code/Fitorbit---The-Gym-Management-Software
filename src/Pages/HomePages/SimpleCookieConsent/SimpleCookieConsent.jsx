@@ -7,8 +7,16 @@ const SimpleCookieConsent = () => {
   const [isClosing, setIsClosing] = useState(false);
   const [userChoice, setUserChoice] = useState(null);
 
-  // Show after 3 seconds with animation
+  // Check localStorage for previous choice
   useEffect(() => {
+    const cookieChoice = localStorage.getItem('cookieConsent');
+    if (cookieChoice) {
+      // User has already made a choice, don't show the banner
+      setUserChoice(cookieChoice);
+      return;
+    }
+
+    // Show after 2 seconds only if no choice was made before
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 2000);
@@ -25,18 +33,27 @@ const SimpleCookieConsent = () => {
   };
 
   const handleAccept = () => {
-    setUserChoice('accepted');
+    const choice = 'accepted';
+    setUserChoice(choice);
+    localStorage.setItem('cookieConsent', choice);
     handleClose();
   };
 
   const handleReject = () => {
-    setUserChoice('rejected');
+    const choice = 'rejected';
+    setUserChoice(choice);
+    localStorage.setItem('cookieConsent', choice);
     handleClose();
   };
 
   const handleCustomize = () => {
     setIsExpanded(!isExpanded);
   };
+
+  // Don't show the banner if user already made a choice
+  if (localStorage.getItem('cookieConsent') && !isVisible) {
+    return null;
+  }
 
   if (!isVisible) return null;
 
@@ -177,6 +194,9 @@ const SimpleCookieConsent = () => {
                         : 'Essential cookies only. Preferences saved.'}
                     </span>
                   </div>
+                  <p className="text-sm mt-1 opacity-75">
+                    Your preference has been saved in your browser.
+                  </p>
                 </div>
               )}
 
