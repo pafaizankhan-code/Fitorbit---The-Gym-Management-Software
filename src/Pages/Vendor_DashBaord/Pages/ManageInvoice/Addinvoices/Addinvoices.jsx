@@ -59,9 +59,7 @@ const AddInvoice = () => {
     notes: 'Thank you for your business! Membership valid for 30 days from invoice date.',
     terms: 'Payment due within 30 days. Late fees of 2% per month apply after due date.',
     items: [
-      { id: 1, name: 'Monthly Membership', description: 'Premium Gym Access - Full Month', quantity: 1, price: 3000, total: 3000 },
-      { id: 2, name: 'Personal Training', description: '5 Sessions Package', quantity: 5, price: 500, total: 2500 },
-      { id: 3, name: 'Protein Supplements', description: 'Whey Protein 2kg', quantity: 2, price: 1000, total: 2000 }
+     
     ]
   });
 

@@ -74,6 +74,8 @@ const AllLeads = () => {
   });
   const [selectedLead, setSelectedLead] = useState(null);
   const [showLeadDetails, setShowLeadDetails] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
   
   // Lead Data
   const [leads, setLeads] = useState([
@@ -384,11 +386,19 @@ const AllLeads = () => {
   useEffect(() => {
     const checkScreenSize = () => {
       const width = window.innerWidth;
-      if (width < 768) {
-        setItemsPerPage(5);
-      } else if (width < 1024) {
-        setItemsPerPage(7);
-      } else {
+      
+      // Update screen size states
+      setIsMobile(width < 768);
+      setIsTablet(width >= 768 && width < 1024);
+      
+      // Update items per page based on screen size
+      if (width < 640) { // Extra small devices (phones)
+        setItemsPerPage(3);
+      } else if (width < 768) { // Small devices
+        setItemsPerPage(4);
+      } else if (width < 1024) { // Medium devices (tablets)
+        setItemsPerPage(6);
+      } else { // Large devices
         setItemsPerPage(8);
       }
     };
@@ -458,11 +468,11 @@ const AllLeads = () => {
   };
 
   const statusIcons = {
-    new: <User className="w-4 h-4" />,
-    contacted: <Phone className="w-4 h-4" />,
-    qualified: <CheckCircle className="w-4 h-4" />,
-    converted: <UserCheck className="w-4 h-4" />,
-    lost: <UserX className="w-4 h-4" />
+    new: <User className="w-3 h-3 sm:w-4 sm:h-4" />,
+    contacted: <Phone className="w-3 h-3 sm:w-4 sm:h-4" />,
+    qualified: <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />,
+    converted: <UserCheck className="w-3 h-3 sm:w-4 sm:h-4" />,
+    lost: <UserX className="w-3 h-3 sm:w-4 sm:h-4" />
   };
 
   const priorityColors = {
@@ -626,85 +636,85 @@ const AllLeads = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-1 md:p-3">
       {/* Header Section */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6 mb-6">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-6">
-          <div className="mb-4 lg:mb-0">
-            <h1 className="text-2xl font-bold text-gray-900">Leads Management</h1>
-            <p className="text-gray-600 mt-1">Track and manage potential members</p>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 sm:p-4 md:p-5 lg:p-6 mb-4 sm:mb-5 md:mb-6">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4 sm:mb-5 md:mb-6">
+          <div className="mb-3 sm:mb-4 lg:mb-0">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">Leads Management</h1>
+            <p className="text-xs sm:text-sm text-gray-600 mt-1">Track and manage potential members</p>
           </div>
 
-          <div className="flex flex-wrap gap-3">
-          <Link to={'/ultimate-control/leads/add'}>
-          
-            <button 
-              className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <UserPlus className="w-4 h-4" />
-              <span className="font-medium">Add Lead</span>
-            </button></Link>
+          <div className="flex flex-wrap gap-2 sm:gap-3">
+            <Link to={'/ultimate-control/leads/add'}>
+              <button 
+                className="flex items-center space-x-1 sm:space-x-2 bg-blue-600 text-white px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-lg hover:bg-blue-700 transition-colors text-xs sm:text-sm"
+              >
+                <UserPlus className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="font-medium">Add Lead</span>
+              </button>
+            </Link>
             <button 
               onClick={exportToCSV}
-              className="flex items-center space-x-2 bg-white border border-gray-300 text-gray-700 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center space-x-1 sm:space-x-2 bg-white border border-gray-300 text-gray-700 px-3 py-1.5 sm:px-4 sm:py-2.5 rounded-lg hover:bg-gray-50 transition-colors text-xs sm:text-sm"
             >
-              <Download className="w-4 h-4" />
+              <Download className="w-3 h-3 sm:w-4 sm:h-4" />
               <span className="font-medium">Export</span>
             </button>
           </div>
         </div>
 
         {/* Search and Filter Bar */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search leads by name, email, or interest..."
+              placeholder="Search leads..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+              className="w-full pl-9 sm:pl-10 pr-3 py-2 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent text-sm"
             />
           </div>
 
           <div className="relative">
             <button
               onClick={() => setFilterMenuOpen(!filterMenuOpen)}
-              className="w-full flex items-center justify-between px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg hover:bg-gray-100"
+              className="w-full flex items-center justify-between px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg hover:bg-gray-100 text-sm"
             >
-              <div className="flex items-center space-x-2">
-                <Filter className="w-4 h-4 text-gray-600" />
+              <div className="flex items-center space-x-1 sm:space-x-2">
+                <Filter className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
                 <span className="text-gray-700">
                   Filters
                   {Object.values(activeFilters).flat().length > 0 && (
-                    <span className="ml-2 bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded-full">
+                    <span className="ml-1 sm:ml-2 bg-blue-600 text-white text-xs px-1 py-0.5 rounded-full">
                       {Object.values(activeFilters).flat().length}
                     </span>
                   )}
                 </span>
               </div>
-              <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform ${filterMenuOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-3 h-3 sm:w-4 sm:h-4 text-gray-600 transition-transform ${filterMenuOpen ? 'rotate-180' : ''}`} />
             </button>
             
             {filterMenuOpen && (
-              <div className="absolute top-full mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50 p-4">
-                <div className="space-y-4">
+              <div className="absolute top-full mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50 p-3 sm:p-4">
+                <div className="space-y-3 sm:space-y-4">
                   <div>
-                    <h4 className="font-medium text-gray-700 mb-2">Status</h4>
-                    <div className="space-y-2">
+                    <h4 className="font-medium text-gray-700 mb-2 text-sm">Status</h4>
+                    <div className="space-y-1 sm:space-y-2">
                       {statusOptions.map(option => (
-                        <label key={option.id} className="flex items-center justify-between cursor-pointer">
+                        <label key={option.id} className="flex items-center justify-between cursor-pointer text-sm">
                           <div className="flex items-center space-x-2">
                             <input 
                               type="checkbox" 
                               checked={activeFilters.status.includes(option.id)}
                               onChange={() => toggleFilter('status', option.id)}
-                              className="rounded text-blue-600 w-4 h-4"
+                              className="rounded text-blue-600 w-3 h-3 sm:w-4 sm:h-4"
                             />
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center space-x-1 sm:space-x-2">
                               <div className={`w-2 h-2 rounded-full bg-${option.color}-500`}></div>
                               <span className="text-gray-700">{option.label}</span>
                             </div>
                           </div>
-                          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                          <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
                             {option.count}
                           </span>
                         </label>
@@ -713,20 +723,20 @@ const AllLeads = () => {
                   </div>
 
                   <div>
-                    <h4 className="font-medium text-gray-700 mb-2">Source</h4>
-                    <div className="space-y-2">
+                    <h4 className="font-medium text-gray-700 mb-2 text-sm">Source</h4>
+                    <div className="space-y-1 sm:space-y-2">
                       {sourceOptions.map(option => (
-                        <label key={option.id} className="flex items-center justify-between cursor-pointer">
+                        <label key={option.id} className="flex items-center justify-between cursor-pointer text-sm">
                           <div className="flex items-center space-x-2">
                             <input 
                               type="checkbox" 
                               checked={activeFilters.source.includes(option.id)}
                               onChange={() => toggleFilter('source', option.id)}
-                              className="rounded text-blue-600 w-4 h-4"
+                              className="rounded text-blue-600 w-3 h-3 sm:w-4 sm:h-4"
                             />
                             <span className="text-gray-700">{option.label}</span>
                           </div>
-                          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                          <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
                             {option.count}
                           </span>
                         </label>
@@ -734,16 +744,16 @@ const AllLeads = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-between mt-4 pt-4 border-t border-gray-200">
+                <div className="flex justify-between mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200">
                   <button 
                     onClick={clearAllFilters}
-                    className="text-sm text-gray-600 hover:text-gray-800"
+                    className="text-xs sm:text-sm text-gray-600 hover:text-gray-800"
                   >
                     Clear All
                   </button>
                   <button 
                     onClick={() => setFilterMenuOpen(false)}
-                    className="text-sm bg-blue-600 text-white px-4 py-2 rounded"
+                    className="text-xs sm:text-sm bg-blue-600 text-white px-3 py-1.5 rounded"
                   >
                     Apply Filters
                   </button>
@@ -752,11 +762,11 @@ const AllLeads = () => {
             )}
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3">
             <select 
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="flex-1 px-3 py-2 sm:px-4 sm:py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 text-sm"
             >
               <option value="recent">Most Recent</option>
               <option value="name">Name (A-Z)</option>
@@ -768,26 +778,26 @@ const AllLeads = () => {
 
         {/* Active Filters */}
         {Object.values(activeFilters).flat().length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-3 sm:mt-4 flex flex-wrap gap-1 sm:gap-2">
             {activeFilters.status.map(status => (
-              <span key={status} className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+              <span key={status} className="inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
                 {statusOptions.find(s => s.id === status)?.label}
                 <button onClick={() => toggleFilter('status', status)} className="ml-1">
-                  <X className="w-3 h-3" />
+                  <X className="w-2 h-2 sm:w-3 sm:h-3" />
                 </button>
               </span>
             ))}
             {activeFilters.source.map(source => (
-              <span key={source} className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+              <span key={source} className="inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
                 {sourceOptions.find(s => s.id === source)?.label}
                 <button onClick={() => toggleFilter('source', source)} className="ml-1">
-                  <X className="w-3 h-3" />
+                  <X className="w-2 h-2 sm:w-3 sm:h-3" />
                 </button>
               </span>
             ))}
             <button 
               onClick={clearAllFilters}
-              className="text-sm text-blue-600 hover:text-blue-800 ml-2"
+              className="text-xs sm:text-sm text-blue-600 hover:text-blue-800 ml-1 sm:ml-2"
             >
               Clear all
             </button>
@@ -795,20 +805,19 @@ const AllLeads = () => {
         )}
       </div>
 
-     
       {/* Leads Table */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Table Header */}
-        <div className="bg-gray-50 border-b border-gray-200 p-4">
+        <div className="bg-gray-50 border-b border-gray-200 p-3 sm:p-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-3">
               <input
                 type="checkbox"
                 checked={selectedLeads.length > 0 && selectedLeads.length === currentLeads.length}
                 onChange={selectAllLeads}
-                className="w-4 h-4 text-blue-600 rounded border-gray-300"
+                className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600 rounded border-gray-300"
               />
-              <span className="text-sm text-gray-700">
+              <span className="text-xs sm:text-sm text-gray-700">
                 {selectedLeads.length > 0 
                   ? `${selectedLeads.length} selected` 
                   : `${filteredAndSortedLeads.length} leads`
@@ -817,12 +826,12 @@ const AllLeads = () => {
             </div>
             
             {selectedLeads.length > 0 && (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2 sm:space-x-3">
                 <button 
                   onClick={handleBulkDelete}
-                  className="flex items-center space-x-1 text-red-600 hover:text-red-800 text-sm"
+                  className="flex items-center space-x-1 text-red-600 hover:text-red-800 text-xs sm:text-sm"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                   <span>Delete</span>
                 </button>
               </div>
@@ -835,12 +844,28 @@ const AllLeads = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left"></th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lead</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Follow-up</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left">
+                  <span className="sr-only">Select</span>
+                </th>
+                <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  {isMobile ? 'Lead Info' : 'Lead'}
+                </th>
+                {!isMobile && (
+                  <>
+                    <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Contact
+                    </th>
+                    <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Follow-up
+                    </th>
+                  </>
+                )}
+                <th className="px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -850,102 +875,113 @@ const AllLeads = () => {
                   onClick={() => handleRowClick(lead)}
                   className="hover:bg-gray-50 cursor-pointer transition-colors duration-150"
                 >
-                  <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
+                  <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4" onClick={(e) => e.stopPropagation()}>
                     <input
                       type="checkbox"
                       checked={selectedLeads.includes(lead.id)}
                       onChange={(e) => toggleLeadSelection(lead.id, e)}
-                      className="w-4 h-4 text-blue-600 rounded border-gray-300"
+                      className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600 rounded border-gray-300"
                     />
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
                     <div className="flex items-center">
-                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center font-bold text-blue-700">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg flex items-center justify-center font-bold text-blue-700 text-xs sm:text-sm">
                         {lead.name.split(' ').map(n => n[0]).join('')}
                       </div>
-                      <div className="ml-4">
-                        <div className="flex items-center space-x-2">
-                          <div className="text-sm font-medium text-gray-900">{lead.name}</div>
-                          <div className={`px-2 py-0.5 rounded-full text-xs font-medium ${getLeadScoreColor(lead.leadScore)}`}>
-                            {lead.leadScore} Score
+                      <div className="ml-2 sm:ml-3 md:ml-4">
+                        <div className="flex items-center space-x-1 sm:space-x-2">
+                          <div className="text-xs sm:text-sm font-medium text-gray-900 truncate max-w-[120px] sm:max-w-none">
+                            {lead.name}
+                          </div>
+                          {!isMobile && (
+                            <div className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${getLeadScoreColor(lead.leadScore)}`}>
+                              {lead.leadScore} Score
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-xs text-gray-500 truncate max-w-[150px] sm:max-w-none">
+                          {isMobile ? `${lead.interest} • ${lead.phone}` : lead.interest}
+                        </div>
+                        {!isMobile && (
+                          <div className="text-xs text-gray-400 mt-1">
+                            Source: {lead.source} • {formatDate(lead.createdAt)}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                  {!isMobile && (
+                    <>
+                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                        <div className="text-xs sm:text-sm text-gray-900">{lead.phone}</div>
+                        <div className="text-xs sm:text-sm text-gray-500 truncate max-w-[150px] md:max-w-[200px]">{lead.email}</div>
+                        <div className="text-xs text-gray-400 mt-1">
+                          Assigned to: {lead.assignedTo}
+                        </div>
+                      </td>
+                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                        <div className="space-y-1 sm:space-y-2">
+                          <span className={`inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-medium border ${statusColors[lead.status]}`}>
+                            {statusIcons[lead.status]}
+                            <span className="ml-1">{isMobile ? lead.status.charAt(0).toUpperCase() : lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}</span>
+                          </span>
+                          <div className={`inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-medium ${priorityColors[lead.priority]}`}>
+                            {isMobile ? lead.priority.charAt(0).toUpperCase() : lead.priority.charAt(0).toUpperCase() + lead.priority.slice(1)} Priority
                           </div>
                         </div>
-                        <div className="text-sm text-gray-500">{lead.interest}</div>
-                        <div className="text-xs text-gray-400 mt-1">
-                          Source: {lead.source} • {formatDate(lead.createdAt)}
+                      </td>
+                      <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+                        <div className={`flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm ${isOverdue(lead.followUpDate) && lead.status !== 'converted' && lead.status !== 'lost' ? 'text-red-600 font-medium' : 'text-gray-900'}`}>
+                          <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <span>{isMobile ? formatDate(lead.followUpDate).split(' ')[0] : formatDate(lead.followUpDate)}</span>
+                          {isOverdue(lead.followUpDate) && lead.status !== 'converted' && lead.status !== 'lost' && !isMobile && (
+                            <span className="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">Overdue</span>
+                          )}
                         </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">{lead.phone}</div>
-                    <div className="text-sm text-gray-500 truncate max-w-[200px]">{lead.email}</div>
-                    <div className="text-xs text-gray-400 mt-1">
-                      Assigned to: {lead.assignedTo}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="space-y-2">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${statusColors[lead.status]}`}>
-                        {statusIcons[lead.status]}
-                        <span className="ml-1">{lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}</span>
-                      </span>
-                      <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${priorityColors[lead.priority]}`}>
-                        {lead.priority.charAt(0).toUpperCase() + lead.priority.slice(1)} Priority
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className={`flex items-center space-x-2 text-sm ${isOverdue(lead.followUpDate) && lead.status !== 'converted' && lead.status !== 'lost' ? 'text-red-600 font-medium' : 'text-gray-900'}`}>
-                      <Calendar className="w-4 h-4" />
-                      <span>{formatDate(lead.followUpDate)}</span>
-                      {isOverdue(lead.followUpDate) && lead.status !== 'converted' && lead.status !== 'lost' && (
-                        <span className="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded">Overdue</span>
+                      </td>
+                    </>
+                  )}
+                  <td className="px-3 sm:px-4 md:px-6 py-3 sm:py-4" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex items-center space-x-1 sm:space-x-2">
+                      {isMobile ? (
+                        <MoreVertical className="w-4 h-4 text-gray-600" />
+                      ) : (
+                        <>
+                          <button 
+                            onClick={(e) => handleCall(lead.phone, e)}
+                            className="p-1 sm:p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
+                            title="Call"
+                          >
+                            <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
+                          </button>
+                          <button 
+                            onClick={(e) => handleSendMessage('sms', lead, e)}
+                            className="p-1 sm:p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg"
+                            title="SMS"
+                          >
+                            <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4" />
+                          </button>
+                          <select 
+                            value={lead.status}
+                            onChange={(e) => handleUpdateStatus(lead.id, e.target.value, e)}
+                            className="text-xs border border-gray-300 rounded px-1.5 py-0.5 sm:px-2 sm:py-1"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <option value="new">New</option>
+                            <option value="contacted">Contacted</option>
+                            <option value="qualified">Qualified</option>
+                            <option value="converted">Converted</option>
+                            <option value="lost">Lost</option>
+                          </select>
+                          <button 
+                            onClick={(e) => handleDeleteLead(lead.id, e)}
+                            className="p-1 sm:p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg"
+                            title="Delete"
+                          >
+                            <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                          </button>
+                        </>
                       )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
-                    <div className="flex items-center space-x-2">
-                      <button 
-                        onClick={(e) => handleCall(lead.phone, e)}
-                        className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
-                        title="Call"
-                      >
-                        <Phone className="w-4 h-4" />
-                      </button>
-                      <button 
-                        onClick={(e) => handleSendMessage('sms', lead, e)}
-                        className="p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg"
-                        title="SMS"
-                      >
-                        <MessageSquare className="w-4 h-4" />
-                      </button>
-                      <button 
-                        onClick={(e) => handleSendMessage('email', lead, e)}
-                        className="p-2 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg"
-                        title="Email"
-                      >
-                        <Mail className="w-4 h-4" />
-                      </button>
-                      <select 
-                        value={lead.status}
-                        onChange={(e) => handleUpdateStatus(lead.id, e.target.value, e)}
-                        className="text-xs border border-gray-300 rounded px-2 py-1"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <option value="new">New</option>
-                        <option value="contacted">Contacted</option>
-                        <option value="qualified">Qualified</option>
-                        <option value="converted">Converted</option>
-                        <option value="lost">Lost</option>
-                      </select>
-                      <button 
-                        onClick={(e) => handleDeleteLead(lead.id, e)}
-                        className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg"
-                        title="Delete"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
                     </div>
                   </td>
                 </tr>
@@ -956,15 +992,15 @@ const AllLeads = () => {
 
         {/* No Results */}
         {currentLeads.length === 0 && (
-          <div className="py-12 text-center">
-            <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-              <Users className="w-12 h-12 text-gray-400" />
+          <div className="py-8 sm:py-12 text-center">
+            <div className="mx-auto w-16 h-16 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+              <Users className="w-8 h-8 sm:w-12 sm:h-12 text-gray-400" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No leads found</h3>
-            <p className="text-gray-500 mb-6">Try adjusting your search or filters</p>
+            <h3 className="text-sm sm:text-lg font-medium text-gray-900 mb-1 sm:mb-2">No leads found</h3>
+            <p className="text-xs sm:text-gray-500 mb-4 sm:mb-6">Try adjusting your search or filters</p>
             <button 
               onClick={clearAllFilters}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
             >
               Clear all filters
             </button>
@@ -973,18 +1009,18 @@ const AllLeads = () => {
 
         {/* Pagination */}
         {filteredAndSortedLeads.length > 0 && (
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-3 sm:p-4 border-t border-gray-200">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between">
-              <div className="text-sm text-gray-600 mb-3 sm:mb-0">
+              <div className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-0">
                 Showing {startIndex + 1} to {Math.min(endIndex, filteredAndSortedLeads.length)} of {filteredAndSortedLeads.length} leads
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1 sm:space-x-2">
                 <button 
                   onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1}
-                  className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
                 </button>
                 {[...Array(Math.min(3, totalPages))].map((_, index) => {
                   let page;
@@ -1001,7 +1037,7 @@ const AllLeads = () => {
                     <button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`px-3 py-2 border rounded-lg text-sm ${
+                      className={`px-2 py-1 sm:px-3 sm:py-2 border rounded-lg text-xs sm:text-sm ${
                         page === currentPage
                           ? 'bg-blue-600 text-white border-blue-600'
                           : 'border-gray-300 hover:bg-gray-50'
@@ -1012,14 +1048,14 @@ const AllLeads = () => {
                   );
                 })}
                 {totalPages > 3 && (
-                  <span className="px-3 py-2 text-gray-500">...</span>
+                  <span className="px-2 py-1 sm:px-3 sm:py-2 text-gray-500">...</span>
                 )}
                 <button 
                   onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                   disabled={currentPage === totalPages}
-                  className="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-2 py-1 sm:px-3 sm:py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
                 </button>
               </div>
             </div>
@@ -1030,118 +1066,118 @@ const AllLeads = () => {
       {/* Lead Details Side Panel */}
       {showLeadDetails && selectedLead && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
-          <div className="bg-white w-full max-w-2xl h-full overflow-y-auto">
+          <div className="bg-white w-full max-w-full sm:max-w-md md:max-w-lg lg:max-w-2xl h-full overflow-y-auto">
             {/* Header */}
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-6">
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-4 sm:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">{selectedLead.name}</h2>
-                  <p className="text-gray-600 mt-1">Lead Details</p>
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{selectedLead.name}</h2>
+                  <p className="text-xs sm:text-sm text-gray-600 mt-1">Lead Details</p>
                 </div>
                 <button
                   onClick={closeLeadDetails}
                   className="p-2 hover:bg-gray-100 rounded-lg"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               </div>
             </div>
 
             {/* Lead Info */}
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               {/* Status & Priority */}
-              <div className="flex items-center space-x-4 mb-6">
-                <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium border ${statusColors[selectedLead.status]}`}>
+              <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
+                <span className={`inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium border ${statusColors[selectedLead.status]}`}>
                   {statusIcons[selectedLead.status]}
-                  <span className="ml-2">{selectedLead.status.charAt(0).toUpperCase() + selectedLead.status.slice(1)}</span>
+                  <span className="ml-1 sm:ml-2">{selectedLead.status.charAt(0).toUpperCase() + selectedLead.status.slice(1)}</span>
                 </span>
-                <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${priorityColors[selectedLead.priority]}`}>
+                <span className={`inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium ${priorityColors[selectedLead.priority]}`}>
                   {selectedLead.priority.charAt(0).toUpperCase() + selectedLead.priority.slice(1)} Priority
                 </span>
-                <span className={`px-4 py-2 rounded-full text-sm font-medium ${getLeadScoreColor(selectedLead.leadScore)}`}>
-                  Lead Score: {selectedLead.leadScore}
+                <span className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium ${getLeadScoreColor(selectedLead.leadScore)}`}>
+                  Score: {selectedLead.leadScore}
                 </span>
               </div>
 
               {/* Contact Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                <div className="space-y-3 sm:space-y-4">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-2">Contact Details</h3>
-                    <div className="space-y-2">
-                      <div className="flex items-center text-gray-900">
-                        <Phone className="w-4 h-4 mr-2 text-gray-400" />
+                    <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-1 sm:mb-2">Contact Details</h3>
+                    <div className="space-y-1.5 sm:space-y-2">
+                      <div className="flex items-center text-gray-900 text-xs sm:text-sm">
+                        <Phone className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 text-gray-400" />
                         {selectedLead.phone}
                       </div>
-                      <div className="flex items-center text-gray-900">
-                        <Mail className="w-4 h-4 mr-2 text-gray-400" />
+                      <div className="flex items-center text-gray-900 text-xs sm:text-sm">
+                        <Mail className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 text-gray-400" />
                         {selectedLead.email}
                       </div>
-                      <div className="flex items-center text-gray-900">
-                        <MapPin className="w-4 h-4 mr-2 text-gray-400" />
+                      <div className="flex items-center text-gray-900 text-xs sm:text-sm">
+                        <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 text-gray-400" />
                         {selectedLead.address}
                       </div>
-                      <div className="flex items-center text-gray-900">
-                        <Building className="w-4 h-4 mr-2 text-gray-400" />
-                        Preferred Branch: {selectedLead.branch}
+                      <div className="flex items-center text-gray-900 text-xs sm:text-sm">
+                        <Building className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 text-gray-400" />
+                        Branch: {selectedLead.branch}
                       </div>
                     </div>
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-2">Personal Information</h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-1 sm:mb-2">Personal Information</h3>
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3">
                       <div>
                         <div className="text-xs text-gray-500">Age</div>
-                        <div className="text-sm font-medium">{selectedLead.age} years</div>
+                        <div className="text-xs sm:text-sm font-medium">{selectedLead.age} years</div>
                       </div>
                       <div>
                         <div className="text-xs text-gray-500">Gender</div>
-                        <div className="text-sm font-medium">{selectedLead.gender}</div>
+                        <div className="text-xs sm:text-sm font-medium">{selectedLead.gender}</div>
                       </div>
                       <div>
                         <div className="text-xs text-gray-500">Occupation</div>
-                        <div className="text-sm font-medium">{selectedLead.occupation}</div>
+                        <div className="text-xs sm:text-sm font-medium">{selectedLead.occupation}</div>
                       </div>
                       <div>
                         <div className="text-xs text-gray-500">Budget</div>
-                        <div className="text-sm font-medium">{selectedLead.budget}</div>
+                        <div className="text-xs sm:text-sm font-medium">{selectedLead.budget}</div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-2">Fitness Details</h3>
-                    <div className="space-y-3">
+                    <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-1 sm:mb-2">Fitness Details</h3>
+                    <div className="space-y-2 sm:space-y-3">
                       <div>
                         <div className="text-xs text-gray-500">Primary Interest</div>
-                        <div className="text-sm font-medium">{selectedLead.interest}</div>
+                        <div className="text-xs sm:text-sm font-medium">{selectedLead.interest}</div>
                       </div>
                       <div>
                         <div className="text-xs text-gray-500">Fitness Goal</div>
-                        <div className="text-sm font-medium">{selectedLead.fitnessGoal}</div>
+                        <div className="text-xs sm:text-sm font-medium">{selectedLead.fitnessGoal}</div>
                       </div>
                       <div>
                         <div className="text-xs text-gray-500">Preferred Time</div>
-                        <div className="text-sm font-medium">{selectedLead.preferredTime}</div>
+                        <div className="text-xs sm:text-sm font-medium">{selectedLead.preferredTime}</div>
                       </div>
                       <div>
                         <div className="text-xs text-gray-500">Health Issues</div>
-                        <div className="text-sm font-medium">{selectedLead.healthIssues}</div>
+                        <div className="text-xs sm:text-sm font-medium">{selectedLead.healthIssues}</div>
                       </div>
                     </div>
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-2">Communication</h3>
-                    <div className="space-y-2">
-                      <div className="text-sm">
+                    <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-1 sm:mb-2">Communication</h3>
+                    <div className="space-y-1 sm:space-y-2">
+                      <div className="text-xs sm:text-sm">
                         <span className="text-gray-500">Preferred: </span>
                         <span className="font-medium">{selectedLead.communicationPreference}</span>
                       </div>
-                      <div className="text-sm">
+                      <div className="text-xs sm:text-sm">
                         <span className="text-gray-500">Family Interested: </span>
                         <span className="font-medium">{selectedLead.familyMembersInterested} members</span>
                       </div>
@@ -1151,35 +1187,35 @@ const AllLeads = () => {
               </div>
 
               {/* Timeline & Important Dates */}
-              <div className="mb-8">
-                <h3 className="text-sm font-medium text-gray-500 mb-4">Timeline</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="mb-6 sm:mb-8">
+                <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-2 sm:mb-4">Timeline</h3>
+                <div className="space-y-2 sm:space-y-3">
+                  <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center">
-                      <Calendar className="w-4 h-4 mr-3 text-gray-400" />
+                      <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-2 sm:mr-3 text-gray-400" />
                       <div>
-                        <div className="text-sm font-medium">Created On</div>
+                        <div className="text-xs sm:text-sm font-medium">Created On</div>
                         <div className="text-xs text-gray-500">{formatDate(selectedLead.createdAt)}</div>
                       </div>
                     </div>
                   </div>
-                  <div className={`flex items-center justify-between p-3 rounded-lg ${isOverdue(selectedLead.followUpDate) && selectedLead.status !== 'converted' && selectedLead.status !== 'lost' ? 'bg-red-50' : 'bg-blue-50'}`}>
+                  <div className={`flex items-center justify-between p-2 sm:p-3 rounded-lg ${isOverdue(selectedLead.followUpDate) && selectedLead.status !== 'converted' && selectedLead.status !== 'lost' ? 'bg-red-50' : 'bg-blue-50'}`}>
                     <div className="flex items-center">
-                      <Clock className="w-4 h-4 mr-3 text-gray-400" />
+                      <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-2 sm:mr-3 text-gray-400" />
                       <div>
-                        <div className="text-sm font-medium">Follow-up Date</div>
+                        <div className="text-xs sm:text-sm font-medium">Follow-up Date</div>
                         <div className="text-xs text-gray-500">{formatDate(selectedLead.followUpDate)}</div>
                       </div>
                     </div>
                     {isOverdue(selectedLead.followUpDate) && selectedLead.status !== 'converted' && selectedLead.status !== 'lost' && (
-                      <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">Overdue</span>
+                      <span className="text-xs bg-red-100 text-red-800 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded">Overdue</span>
                     )}
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center">
-                      <ClockIcon className="w-4 h-4 mr-3 text-gray-400" />
+                      <ClockIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-2 sm:mr-3 text-gray-400" />
                       <div>
-                        <div className="text-sm font-medium">Last Contact</div>
+                        <div className="text-xs sm:text-sm font-medium">Last Contact</div>
                         <div className="text-xs text-gray-500">{formatDate(selectedLead.lastContact)}</div>
                       </div>
                     </div>
@@ -1188,35 +1224,35 @@ const AllLeads = () => {
               </div>
 
               {/* Notes & Details */}
-              <div className="mb-8">
-                <h3 className="text-sm font-medium text-gray-500 mb-3">Notes & Details</h3>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-sm text-gray-700">{selectedLead.notes}</p>
+              <div className="mb-6 sm:mb-8">
+                <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-2 sm:mb-3">Notes & Details</h3>
+                <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
+                  <p className="text-xs sm:text-sm text-gray-700">{selectedLead.notes}</p>
                 </div>
               </div>
 
               {/* Additional Information */}
-              <div className="mb-8">
-                <h3 className="text-sm font-medium text-gray-500 mb-3">Additional Information</h3>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white border border-gray-200 rounded-lg p-3">
+              <div className="mb-6 sm:mb-8">
+                <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-2 sm:mb-3">Additional Information</h3>
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                    <div className="bg-white border border-gray-200 rounded-lg p-2 sm:p-3">
                       <div className="text-xs text-gray-500">Source</div>
-                      <div className="text-sm font-medium mt-1">{selectedLead.source}</div>
+                      <div className="text-xs sm:text-sm font-medium mt-0.5 sm:mt-1">{selectedLead.source}</div>
                     </div>
-                    <div className="bg-white border border-gray-200 rounded-lg p-3">
+                    <div className="bg-white border border-gray-200 rounded-lg p-2 sm:p-3">
                       <div className="text-xs text-gray-500">Assigned To</div>
-                      <div className="text-sm font-medium mt-1">{selectedLead.assignedTo}</div>
+                      <div className="text-xs sm:text-sm font-medium mt-0.5 sm:mt-1">{selectedLead.assignedTo}</div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white border border-gray-200 rounded-lg p-3">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                    <div className="bg-white border border-gray-200 rounded-lg p-2 sm:p-3">
                       <div className="text-xs text-gray-500">Branch Visit</div>
-                      <div className="text-sm font-medium mt-1">{selectedLead.visitedBranch}</div>
+                      <div className="text-xs sm:text-sm font-medium mt-0.5 sm:mt-1">{selectedLead.visitedBranch}</div>
                     </div>
-                    <div className="bg-white border border-gray-200 rounded-lg p-3">
+                    <div className="bg-white border border-gray-200 rounded-lg p-2 sm:p-3">
                       <div className="text-xs text-gray-500">Trial Session</div>
-                      <div className="text-sm font-medium mt-1">{selectedLead.trialTaken}</div>
+                      <div className="text-xs sm:text-sm font-medium mt-0.5 sm:mt-1">{selectedLead.trialTaken}</div>
                     </div>
                   </div>
                 </div>
@@ -1224,11 +1260,11 @@ const AllLeads = () => {
 
               {/* Tags */}
               {selectedLead.tags && selectedLead.tags.length > 0 && (
-                <div className="mb-8">
-                  <h3 className="text-sm font-medium text-gray-500 mb-3">Tags</h3>
-                  <div className="flex flex-wrap gap-2">
+                <div className="mb-6 sm:mb-8">
+                  <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-2 sm:mb-3">Tags</h3>
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {selectedLead.tags.map((tag, index) => (
-                      <span key={index} className="inline-flex items-center px-3 py-1 bg-blue-50 text-blue-700 text-sm rounded-full">
+                      <span key={index} className="inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 bg-blue-50 text-blue-700 text-xs rounded-full">
                         {tag}
                       </span>
                     ))}
@@ -1237,42 +1273,42 @@ const AllLeads = () => {
               )}
 
               {/* Next Action */}
-              <div className="mb-8">
-                <h3 className="text-sm font-medium text-gray-500 mb-3">Next Action Required</h3>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <div className="mb-6 sm:mb-8">
+                <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-2 sm:mb-3">Next Action Required</h3>
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 sm:p-4">
                   <div className="flex items-center">
-                    <TargetIcon className="w-5 h-5 text-yellow-600 mr-3" />
+                    <TargetIcon className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 mr-2 sm:mr-3" />
                     <div>
-                      <div className="text-sm font-medium text-yellow-800">{selectedLead.nextAction}</div>
-                      <div className="text-xs text-yellow-600 mt-1">Follow up by {formatDate(selectedLead.followUpDate)}</div>
+                      <div className="text-xs sm:text-sm font-medium text-yellow-800">{selectedLead.nextAction}</div>
+                      <div className="text-xs text-yellow-600 mt-0.5 sm:mt-1">Follow up by {formatDate(selectedLead.followUpDate)}</div>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-between border-t border-gray-200 pt-6">
-                <div className="flex items-center space-x-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-gray-200 pt-4 sm:pt-6">
+                <div className="flex flex-wrap gap-2">
                   <button
                     onClick={(e) => handleCall(selectedLead.phone, e)}
-                    className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    className="flex items-center space-x-1.5 sm:space-x-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-xs sm:text-sm"
                   >
-                    <Phone className="w-4 h-4" />
+                    <Phone className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span>Call Now</span>
                   </button>
                   <button
                     onClick={(e) => handleSendMessage('sms', selectedLead, e)}
-                    className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                    className="flex items-center space-x-1.5 sm:space-x-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-xs sm:text-sm"
                   >
-                    <MessageSquare className="w-4 h-4" />
+                    <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span>Send SMS</span>
                   </button>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex flex-wrap gap-2">
                   <select 
                     value={selectedLead.status}
                     onChange={(e) => handleUpdateStatus(selectedLead.id, e.target.value, e)}
-                    className="text-sm border border-gray-300 rounded px-3 py-2"
+                    className="text-xs sm:text-sm border border-gray-300 rounded px-2 py-1.5 sm:px-3 sm:py-2"
                   >
                     <option value="new">Mark as New</option>
                     <option value="contacted">Mark as Contacted</option>
@@ -1282,9 +1318,9 @@ const AllLeads = () => {
                   </select>
                   <button
                     onClick={(e) => handleDeleteLead(selectedLead.id, e)}
-                    className="flex items-center space-x-2 px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200"
+                    className="flex items-center space-x-1.5 sm:space-x-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 text-xs sm:text-sm"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span>Delete</span>
                   </button>
                 </div>

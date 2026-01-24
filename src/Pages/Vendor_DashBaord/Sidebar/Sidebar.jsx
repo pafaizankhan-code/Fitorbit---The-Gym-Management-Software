@@ -32,7 +32,9 @@ import {
   HelpCircle,
   Database,
   Dumbbell,  // For Workout
-  Apple      // ← Added for Diet
+  Apple,     // For Diet
+  Percent,   // For Offers & Promotions
+  Clock      // ← Added for Class Schedule
 } from 'lucide-react';
 
 const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
@@ -46,9 +48,12 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
     workout: false,     // ← Separated: Workout (default expanded)
     members: false,
     membership: false,
+    offers: false,      // ← New for Offers & Promotions
     attendance: false,
+    classSchedule: false, // ← New for Class Schedule Management
     payments: false,
     finance: false,     // ← New for Finance Management
+    inventory: false,   // ← New for Inventory Management
     staff: false,
     expenses: false,
     reports: false,
@@ -92,6 +97,26 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
   const financeManagement = [
     { id: 'manage_invoice', label: 'Manage Invoice', path: 'finance/invoices', count: null },
     { id: 'add_invoices', label: 'Create Invoice', path: 'finance/add-invoices', count: null },
+  ];
+
+  // ← New: Inventory Management
+  const inventoryManagement = [
+    { id: 'manage_products', label: 'Manage Supplements & Products', path: 'inventory/products', count: null },
+    { id: 'stock_io', label: 'Stock In / Stock Out', path: 'inventory/stock', count: null },
+    { id: 'low_stock', label: 'Low Stock Alerts', path: 'inventory/alerts', count: 3 },
+    { id: 'sales_tracking', label: 'Sales Tracking', path: 'inventory/sales', count: null },
+  ];
+
+  // ← New: Offers & Promotions
+  const offersPromotions = [
+    { id: 'create_offers', label: 'Create Offers', path: 'offers/create', count: null },
+  ];
+
+  // ← New: Class Schedule Management
+  const classScheduleManagement = [
+    { id: 'all_schedules', label: 'All Class Schedules', path: 'class-schedule/all', count: 25 },
+    { id: 'add_class', label: 'Add New Class', path: 'class-schedule/add', count: null },
+    { id: 'calendar_view', label: 'Calendar View', path: 'class-schedule/calendar', count: null }
   ];
 
   // Member Management
@@ -179,6 +204,16 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
     if (isMobile) {
       onClose();
     }
+  };
+
+  // Render count badge
+  const renderCount = (count) => {
+    if (!count) return null;
+    return (
+      <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">
+        {count}
+      </span>
+    );
   };
 
   return (
@@ -299,7 +334,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                     }`}>
                       {item.label}
                     </span>
-                  
+                    
                   </button>
                 ))}
               </div>
@@ -340,7 +375,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                     }`}>
                       {item.label}
                     </span>
-                
+                    
                   </button>
                 ))}
               </div>
@@ -381,7 +416,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                     }`}>
                       {item.label}
                     </span>
-                
+                    
                   </button>
                 ))}
               </div>
@@ -422,7 +457,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                     }`}>
                       {item.label}
                     </span>
-                
+                    
                   </button>
                 ))}
               </div>
@@ -463,7 +498,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                     }`}>
                       {item.label}
                     </span>
-                
+                    
                   </button>
                 ))}
               </div>
@@ -504,7 +539,48 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                     }`}>
                       {item.label}
                     </span>
-                
+                    
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* ← New: Offers & Promotions */}
+          <div className="mb-3">
+            <button
+              onClick={() => toggleSection('offers')}
+              className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
+            >
+              <div className="flex items-center">
+                <Percent className="w-4 h-4 mr-3 text-blue-600" />
+                <span className="text-sm font-medium text-black">Offers & Promotions</span>
+              </div>
+              {expandedSections.offers ? (
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-500" />
+              )}
+            </button>
+            
+            {expandedSections.offers && (
+              <div className="mt-1 space-y-0.5">
+                {offersPromotions.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavigation(item.path)}
+                    className={`w-full flex items-center justify-between px-5 pl-10 py-2 text-left ${
+                      isActive(item.path)
+                        ? 'bg-blue-50 border-r-4 border-blue-600' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className={`text-sm ${
+                      isActive(item.path) ? 'text-blue-600 font-medium' : 'text-gray-700'
+                    }`}>
+                      {item.label}
+                    </span>
+                    
                   </button>
                 ))}
               </div>
@@ -545,14 +621,53 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                     }`}>
                       {item.label}
                     </span>
-                
+                    
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-       
+          {/* ← New: 8️⃣ Class Schedule Management */}
+          <div className="mb-3">
+            <button
+              onClick={() => toggleSection('classSchedule')}
+              className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
+            >
+              <div className="flex items-center">
+                <Clock className="w-4 h-4 mr-3 text-blue-600" />
+                <span className="text-sm font-medium text-black">Manage Class Schedule</span>
+              </div>
+              {expandedSections.classSchedule ? (
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-500" />
+              )}
+            </button>
+            
+            {expandedSections.classSchedule && (
+              <div className="mt-1 space-y-0.5">
+                {classScheduleManagement.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavigation(item.path)}
+                    className={`w-full flex items-center justify-between px-5 pl-10 py-2 text-left ${
+                      isActive(item.path)
+                        ? 'bg-blue-50 border-r-4 border-blue-600' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className={`text-sm ${
+                      isActive(item.path) ? 'text-blue-600 font-medium' : 'text-gray-700'
+                    }`}>
+                      {item.label}
+                    </span>
+                    
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* ← New: 9️⃣ Finance Management */}
           <div className="mb-3">
@@ -588,14 +703,16 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                     }`}>
                       {item.label}
                     </span>
-                
+                    
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* 🔟 Staff/Trainer Management */}
+        
+
+          {/* 1️⃣1️⃣ Staff/Trainer Management */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('staff')}
@@ -629,14 +746,14 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                     }`}>
                       {item.label}
                     </span>
-                
+                    
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* 1️⃣1️⃣ Expense Management */}
+          {/* 1️⃣2️⃣ Expense Management */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('expenses')}
@@ -670,14 +787,14 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                     }`}>
                       {item.label}
                     </span>
-                
+                    
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* 1️⃣2️⃣ Reports & Analytics */}
+          {/* 1️⃣3️⃣ Reports & Analytics */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('reports')}
@@ -711,14 +828,14 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                     }`}>
                       {item.label}
                     </span>
-                
+                    
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* 1️⃣3️⃣ Notifications & Reminders */}
+          {/* 1️⃣4️⃣ Notifications & Reminders */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('notifications')}
@@ -752,7 +869,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                     }`}>
                       {item.label}
                     </span>
-                
+                    
                   </button>
                 ))}
               </div>

@@ -64,27 +64,19 @@ const Login = () => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.username,
-          password: formData.password
-        })
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        const token = data.token;
-        const user = data.user;
-        
+      // Mock login without API - hardcoded credentials check
+      const mockToken = 'mock-jwt-token-' + Date.now(); // Generate a simple mock token
+      const mockUser = {
+        email: formData.username,
+        role: 'SUPER_ADMIN' // Assume super admin role for this hardcoded login
+      };
+
+      // Check hardcoded credentials
+      if (formData.username === 'admin@fitorbit.com' && formData.password === '12345678') {
         // Store login state in localStorage if "Remember me" is checked
         if (rememberMe) {
           localStorage.setItem('Fitorbit_remembered', JSON.stringify({
-            username: user.email,
+            username: mockUser.email,
             remember: true
           }));
         } else {
@@ -92,21 +84,21 @@ const Login = () => {
         }
         
         // Store session token and user
-        sessionStorage.setItem('Fitorbit_token', token);
-        sessionStorage.setItem('Fitorbit_user', user.email);
+        sessionStorage.setItem('Fitorbit_token', mockToken);
+        sessionStorage.setItem('Fitorbit_user', mockUser.email);
         
         // Navigate based on role
-        if (user.role === 'GYM_OWNER') {
+        if (mockUser.role === 'GYM_OWNER') {
           navigate('/ultimate-control');
-        } else if (user.role === 'SUPER_ADMIN') {
-          navigate('/admin-control');
+        } else if (mockUser.role === 'SUPER_ADMIN') {
+          navigate('/ultimate-control');
         } else {
           // Default navigation for other roles
           navigate('/ultimate-control');
         }
       } else {
         setErrors({
-          general: data.message || 'Invalid email or password. Please try again.'
+          general: 'Invalid email or password. Please try again.'
         });
       }
     } catch (error) {
@@ -171,8 +163,7 @@ const Login = () => {
     <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-xs">
       <p className="font-medium text-blue-800 mb-1">Demo Credentials:</p>
       <div className="space-y-1">
-        <p className="text-blue-700">admin@Fitorbit.com / Admin@123</p>
-        <p className="text-blue-700">owner@Fitorbit.com / Owner@456</p>
+        <p className="text-blue-700">admin@fitorbit.com / 12345678</p>
       </div>
     </div>
   );

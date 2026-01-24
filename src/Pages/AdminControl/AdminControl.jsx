@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
-import { 
+import {
   LayoutDashboard,
   Users,
   CreditCard,
@@ -35,12 +35,11 @@ import {
   List,
   PlusCircle
 } from 'lucide-react';
-import { CardMembership, CreateNewFolder } from '@mui/icons-material';
 
 const AdminControl = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [expandedMenus, setExpandedMenus] = useState(['Dashboard', 'Gym Network']);
+  const [expandedMenus, setExpandedMenus] = useState([]);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const toggleMenu = (menu) => {
@@ -51,91 +50,169 @@ const AdminControl = () => {
     }
   };
 
+  const superAdminFeatures = {
+    features: [
+    
+      {
+        "category": "Gym Management",
+        "items": [
+          "Create Gym",
+          "Update Gym Details",
+          "Suspend / Activate Gym",
+          "Delete Gym",
+          "Manage Multiple Branches",
+          "Assign Gym Admin",
+          "Gym Approval System",
+          "Enable / Disable Gym Modules"
+        ]
+      },
+    
+      {
+        "category": "Membership & Subscription",
+        "items": [
+          "Create Global Membership Plans",
+          "Assign Plans to Gyms",
+          "Custom Pricing Per Gym",
+          "Free Trial Management",
+          "Plan Upgrade / Downgrade",
+          "Auto Renewal Control",
+          "Membership Expiry Rules"
+        ]
+      },
+      {
+        "category": "Billing & Payments",
+        "items": [
+          "Global Revenue Dashboard",
+          "Commission Management",
+          "Invoice Management",
+          "Payment Gateway Control",
+          "GST / Tax Configuration",
+          "Refund Management",
+          "Payment Dispute Handling"
+        ]
+      },
+      {
+        "category": "Reports & Analytics",
+        "items": [
+          "Overall Business Dashboard",
+          "Gym Wise Reports",
+          "Revenue Analytics",
+          "Member Growth Reports",
+          "Active / Inactive Gym Reports",
+          "Export Reports (PDF, Excel)"
+        ]
+      },
+     
+      {
+        "category": "Offers & Promotions",
+        "items": [
+          "Create Global Offers",
+          "Promo Code Management",
+          "Festival Offers",
+          "Usage Limits",
+          "Offer Expiry Control"
+        ]
+      },
+      {
+        "category": "Communication",
+        "items": [
+          "Global SMS Settings",
+          "WhatsApp Integration",
+          "Email Configuration",
+          "Broadcast Notifications",
+          "Custom Notification Templates"
+        ]
+      },
+      {
+        "category": "Trainer & Staff Oversight",
+        "items": [
+          "View All Trainers",
+          "Trainer Performance Tracking",
+          "Staff Attendance Overview",
+          "Salary Structure View"
+        ]
+      },
+     
+
+      {
+        "category": "API & Integrations",
+        "items": [
+          "API Key Management",
+          "Third Party Integrations",
+          "Webhook Monitoring",
+          "App Version Control"
+        ]
+      },
+
+    ]
+  };
+
+  const slugify = (text) => {
+    return text
+      .replace(/ & /g, ' and ')
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim('-');
+  };
+
+  const categoryIcons = {
+    "Authentication & Security": <Shield size={16} />,
+    "Gym Management": <Building2 size={16} />,
+    "User & Role Management": <Users size={16} />,
+    "Membership & Subscription": <CreditCard size={16} />,
+    "Billing & Payments": <Wallet size={16} />,
+    "Reports & Analytics": <BarChart3 size={16} />,
+    "Appointment Monitoring": <Calendar size={16} />,
+    "Offers & Promotions": <Award size={16} />,
+    "Communication": <Bell size={16} />,
+    "Trainer & Staff Oversight": <Dumbbell size={16} />,
+    "Inventory & Products": <Database size={16} />,
+    "System Settings": <Settings size={16} />,
+    "Automation & AI": <Cpu size={16} />,
+    "Support & Tickets": <HelpCircle size={16} />,
+    "API & Integrations": <Globe size={16} />,
+    "Fraud & Monitoring": <Activity size={16} />,
+    "Legal & Compliance": <FileText size={16} />
+  };
+
+  const subIcon = <List size={14} />;
+
+  const menuItems = [
+    {
+      name: "Dashboard",
+      icon: <LayoutDashboard size={16} />,
+      path: "/admin-control",
+      subItems: []
+    },
+    ...superAdminFeatures.features.map((cat) => ({
+      name: cat.category,
+      icon: categoryIcons[cat.category],
+      path: `/admin-control/${slugify(cat.category)}`,
+      subItems: cat.items.map((item) => ({
+        name: item,
+        path: `/admin-control/${slugify(cat.category)}/${slugify(item)}`,
+        icon: subIcon
+      }))
+    }))
+  ];
+
   // Compute active menu based on current route
   const getActiveMenu = () => {
     const path = location.pathname;
     if (path === '/admin-control' || path === '/') return 'Dashboard';
-    if (path.startsWith('/admin-control/members')) return 'Members';
-    if (path.startsWith('/admin-control/gyms')) return 'Gym Network';
-    if (path.startsWith('/admin-control/plans')) return 'Subscriptions';
-    if (path.startsWith('/admin-control/system')) return 'System';
+
+    const categorySlugs = superAdminFeatures.features.map((cat) => slugify(cat.category));
+    for (let i = 0; i < categorySlugs.length; i++) {
+      if (path.startsWith(`/admin-control/${categorySlugs[i]}`)) {
+        return superAdminFeatures.features[i].category;
+      }
+    }
     return 'Dashboard';
   };
 
   const activeMenu = getActiveMenu();
-
- const menuItems = [
-  {
-    name: "Dashboard",
-    icon: <LayoutDashboard size={16} />,
-    path: "/admin-control",
-    subItems: []
-  },
-  {
-    name: "Members",
-    icon: <Users size={16} />,
-    badge: "427",
-    path: "/admin-control/members",
-    subItems: [
-      { 
-        name: "All Members", 
-        path: "/admin-control/members", 
-        icon: <UserCheck size={14} /> 
-      },
-    ]
-  },
-  {
-    name: "Gym Master",                    // ← NEW SECTION
-    icon: <Building2 size={16} />,          // or <Dumbbell />, <Home />, <Building />, etc.
-    path: "/admin-control/gyms",            // main link (can be first sub-item or overview)
-    subItems: [
-      { 
-        name: "Manage Gym", 
-        path: "/admin-control/gyms", 
-        icon: <List size={14} />               // or <Building />, <Settings />
-      },
-      { 
-        name: "Add New Gym", 
-        path: "/admin-control/gyms/new", 
-        icon: <PlusCircle size={14} />         // or <Plus />, <BuildingPlus />
-      }
-    ]
-  },
-  {
-    name: "Subscriptions",
-    icon: <FileText size={16} />,
-    badge: "412",
-    path: "/admin-control/plans",
-    subItems: [
-      { 
-        name: "Manage Plans", 
-        path: "/admin-control/plans", 
-        icon: <CardMembership size={14} /> 
-      },
-      { 
-        name: "Add New Plans", 
-        path: "/admin-control/plans/new", 
-        icon: <CreateNewFolder size={14} /> 
-      }
-    ]
-  },
-  {
-    name: "System",
-    icon: <Settings size={16} />,
-    path: "/admin-control/system",
-    subItems: [
-      { name: "Database", path: "/admin-control/system/database", icon: <Database size={14} /> },
-      { name: "Security", path: "/admin-control/system/security", icon: <ShieldCheck size={14} /> },
-      { name: "Support", path: "/admin-control/system/support", icon: <HelpCircle size={14} /> }
-    ]
-  }
-];
-  const gyms = [
-    { name: "FitOrbit Central", status: "active", city: "Mumbai" },
-    { name: "FitOrbit Elite", status: "active", city: "Delhi" },
-    { name: "FitOrbit Pro", status: "maintenance", city: "Bangalore" },
-    { name: "FitOrbit Plus", status: "active", city: "Chennai" }
-  ];
 
   // Helper to check if sub-item is active
   const isSubActive = (subPath) => location.pathname === subPath;
@@ -144,15 +221,15 @@ const AdminControl = () => {
     <div className="min-h-screen ">
       {/* Sidebar */}
       <div className={`bg-white h-screen fixed left-0 top-0 border-r border-gray-200 flex flex-col transition-all duration-300 ${
-        sidebarCollapsed ? 'w-16' : 'w-64'
+        sidebarCollapsed ? 'w-16' : 'w-72'
       }`}>
-        
+       
         {/* Header */}
         <div className={`border-b border-gray-200 ${sidebarCollapsed ? 'p-3' : 'px-5 py-4'}`}>
           {!sidebarCollapsed ? (
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                
+               
                 <div className="">
                   <h1 className="text-base font-semibold text-gray-900">FitOrbit</h1>
                   <div className="flex items-center mt-0.5">
@@ -161,7 +238,7 @@ const AdminControl = () => {
                   </div>
                 </div>
               </div>
-              
+             
             </div>
           ) : (
             <div className="flex items-center justify-center">
@@ -170,7 +247,6 @@ const AdminControl = () => {
               </div>
             </div>
           )}
-
           {/* Search - Expanded only */}
           {!sidebarCollapsed && (
             <div className="relative mt-4">
@@ -183,11 +259,9 @@ const AdminControl = () => {
             </div>
           )}
         </div>
-
-    
-
+   
         {/* Navigation Menu */}
-        <div className={`flex-1 overflow-y-auto ${sidebarCollapsed ? 'py-3' : 'py-4'}`}>
+        <div className={`flex-1 overflow-y-auto scrollbar-hide ${sidebarCollapsed ? 'py-3' : 'py-4'}`}>
           <div className={`space-y-0.5 ${sidebarCollapsed ? 'px-2' : 'px-3'}`}>
             {menuItems.map((item) => (
               <div key={item.name}>
@@ -196,14 +270,14 @@ const AdminControl = () => {
                   <div className="relative">
                     <div
                       className={`w-10 h-10 mx-auto flex items-center justify-center rounded cursor-pointer transition-colors ${
-                        activeMenu === item.name 
-                          ? 'bg-blue-600 text-white' 
+                        activeMenu === item.name
+                          ? 'bg-blue-600 text-white'
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
                       onClick={() => navigate(item.path)}
                     >
                       {item.icon}
-                      
+                     
                     </div>
                   </div>
                 ) : (
@@ -211,13 +285,13 @@ const AdminControl = () => {
                   <div className="mb-0.5">
                     <div
                       className={`flex items-center justify-between p-2.5 rounded cursor-pointer transition-colors ${
-                        activeMenu === item.name 
-                          ? 'bg-blue-600 text-white' 
+                        activeMenu === item.name
+                          ? 'bg-blue-600 text-white'
                           : 'text-gray-700 hover:bg-gray-50'
                       }`}
                       onClick={() => {
                         navigate(item.path);
-                        if (item.subItems.length > 0) {
+                        if (item.subItems.length > 0 && !expandedMenus.includes(item.name)) {
                           toggleMenu(item.name);
                         }
                       }}
@@ -230,20 +304,19 @@ const AdminControl = () => {
                         </div>
                         <span className="text-sm font-medium">{item.name}</span>
                       </div>
-                      
+                     
                       <div className="flex items-center gap-1.5">
-                       
+                      
                         {item.subItems.length > 0 && (
                           <span className={activeMenu === item.name ? 'text-white/80' : 'text-gray-400'}>
-                            {expandedMenus.includes(item.name) ? 
-                              <ChevronDown size={14} /> : 
+                            {expandedMenus.includes(item.name) ?
+                              <ChevronDown size={14} /> :
                               <ChevronRight size={14} />
                             }
                           </span>
                         )}
                       </div>
                     </div>
-
                     {/* Sub-items */}
                     {item.subItems.length > 0 && expandedMenus.includes(item.name) && (
                       <div className="ml-9 mt-0.5 mb-1 space-y-0.5 border-l border-gray-200">
@@ -259,9 +332,6 @@ const AdminControl = () => {
                           >
                             <span className="mr-2 text-gray-400">{subItem.icon}</span>
                             <span className="flex-1">{subItem.name}</span>
-                            {subItem.city && (
-                              <span className="text-xs text-gray-400 ml-2">({subItem.city})</span>
-                            )}
                           </div>
                         ))}
                       </div>
@@ -271,10 +341,8 @@ const AdminControl = () => {
               </div>
             ))}
           </div>
-
-         
+        
         </div>
-
         {/* Admin Profile */}
         <div className="border-t border-gray-200">
           {sidebarCollapsed ? (
@@ -316,7 +384,7 @@ const AdminControl = () => {
               </div>
             </>
           )}
-          
+         
           {!sidebarCollapsed && (
             <div className="px-3 py-1.5 border-t border-gray-100 bg-gray-50">
               <div className="flex items-center justify-between text-xs">
@@ -330,20 +398,18 @@ const AdminControl = () => {
           )}
         </div>
       </div>
-
       {/* Collapse Toggle - Only when collapsed */}
       {sidebarCollapsed && (
-        <button 
+        <button
           onClick={() => setSidebarCollapsed(false)}
           className="fixed left-16 top-4 w-6 h-6 bg-white border border-gray-200 rounded-r flex items-center justify-center text-gray-500 hover:text-gray-700 shadow-sm z-10"
         >
           <ChevronRight size={12} />
         </button>
       )}
-
       {/* Main Content Area */}
      <div className="m-3">
-       <div className={sidebarCollapsed ? 'ml-16' : 'ml-64 '}>
+       <div className={sidebarCollapsed ? 'ml-16' : 'ml-72'}>
         <Outlet />
       </div>
      </div>

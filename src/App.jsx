@@ -50,6 +50,10 @@ import Workoutplans from "./Pages/Vendor_DashBaord/Pages/Workoutplans/Workoutpla
 import AddWorkoutplans from "./Pages/Vendor_DashBaord/Pages/Workoutplans/AddWorkoutplans/AddWorkoutplans";
 import ManageInvoice from "./Pages/Vendor_DashBaord/Pages/ManageInvoice/ManageInvoice";
 import Addinvoices from "./Pages/Vendor_DashBaord/Pages/ManageInvoice/Addinvoices/Addinvoices";
+import Classschedule from "./Pages/Vendor_DashBaord/Pages/Classschedule/Classschedule";
+import ClasscalendarView from "./Pages/Vendor_DashBaord/Pages/Classschedule/ClasscalendarView/ClasscalendarView";
+import CreateClassc from "./Pages/Vendor_DashBaord/Pages/Classschedule/CreateClassc/CreateClassc";
+import CreateOffer from "./Pages/Vendor_DashBaord/Pages/Offermanage/CreateOffer/CreateOffer";
 
 function AppContent() {
   const location = useLocation();
@@ -70,7 +74,7 @@ function AppContent() {
       {/* You can uncomment when you're ready to show chatbot on public pages */}
       {/* {!isDashboardRoute && <FitOrbitChatbot />} */}
 
-      {!isDashboardRoute && <SimpleCookieConsent />}
+      {/* {!isDashboardRoute && <SimpleCookieConsent />} */}
 
       <Routes>
         {/* ── Public Routes ──────────────────────────────────────────────── */}
@@ -118,6 +122,14 @@ function AppContent() {
 
           <Route path="finance/invoices" element={<ManageInvoice />} />
           <Route path="finance/add-invoices" element={<Addinvoices />} />
+
+
+          <Route path="class-schedule/all" element={<Classschedule />} />
+          <Route path="class-schedule/calendar" element={<ClasscalendarView />} />
+          <Route path="class-schedule/add" element={<CreateClassc />} />
+
+
+          <Route path="offers/create" element={<CreateOffer />} />
 
 
           {/* Settings & Others */}
