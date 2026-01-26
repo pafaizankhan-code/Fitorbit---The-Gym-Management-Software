@@ -1025,9 +1025,8 @@ const ManageInvoice = () => {
           </div>
 
           <div className="flex flex-wrap gap-2 sm:gap-3">
-           <Link>
+           <Link to={'/ultimate-control/finance/add-invoices'}>
             <button 
-              onClick={() => setShowAddInvoice(true)}
               className="flex items-center space-x-1 sm:space-x-2 bg-blue-600 text-white px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
             >
               <Plus className="w-3 h-3 sm:w-4 sm:h-4" />

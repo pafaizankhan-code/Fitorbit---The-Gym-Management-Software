@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Building2,
   MapPin,
@@ -365,139 +365,147 @@ const AllGyms = () => {
   return (
     <div className="min-h-screen p-1 md:p-3">
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-          <div>
-            <div className="flex items-center space-x-3 mb-3">
-             
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Gym Management</h1>
-                <p className="text-gray-600">Manage all registered gyms and their subscriptions</p>
-              </div>
-            </div>
-            
-            {/* Quick Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              {[
-                { label: 'Total Gyms', value: stats.totalGyms, icon: Building2, color: 'blue' },
-                { label: 'Active Gyms', value: stats.activeGyms, icon: CheckCircle, color: 'green' },
-                { label: 'Total Members', value: stats.totalMembers.toLocaleString(), icon: Users, color: 'purple' },
-                { label: 'Total Revenue', value: formatCurrency(stats.totalRevenue), icon: IndianRupee, color: 'amber' }
-              ].map((stat, index) => (
-                <div key={index} className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
-                      <div className="text-sm text-gray-600 mt-1">{stat.label}</div>
-                    </div>
-                    <div className={`p-3 rounded-lg ${
-                      stat.color === 'blue' ? 'bg-blue-50' : 
-                      stat.color === 'green' ? 'bg-green-50' : 
-                      stat.color === 'purple' ? 'bg-purple-50' : 'bg-amber-50'
-                    }`}>
-                      <stat.icon className={`w-5 h-5 ${
-                        stat.color === 'blue' ? 'text-blue-600' : 
-                        stat.color === 'green' ? 'text-green-600' : 
-                        stat.color === 'purple' ? 'text-purple-600' : 'text-amber-600'
-                      }`} />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => navigate('/admin-control/gyms/new')}
-              className="flex items-center space-x-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Add New Gym</span>
-            </button>
-            <button className="p-2.5 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 shadow-sm">
-              <Download className="w-4 h-4 text-gray-600" />
-            </button>
-            <button className="p-2.5 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 shadow-sm">
-              <Printer className="w-4 h-4 text-gray-600" />
-            </button>
-          </div>
-        </div>
-
-        {/* Search and Filter Bar */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6 shadow-sm">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search gyms by name, owner or city..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-
-            {/* Status Filter */}
-            <div>
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
-            </div>
-
-            {/* Plan Filter */}
-            <div>
-              <select
-                value={filterPlan}
-                onChange={(e) => setFilterPlan(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="all">All Plans</option>
-                {planOptions.map(plan => (
-                  <option key={plan} value={plan}>{plan}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* City Filter */}
-            <div>
-              <select
-                value={filterCity}
-                onChange={(e) => setFilterCity(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="all">All Cities</option>
-                {cityOptions.map(city => (
-                  <option key={city} value={city}>{city}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Sort */}
-            <div>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="revenue">Sort by Revenue</option>
-                <option value="members">Sort by Members</option>
-                <option value="rating">Sort by Rating</option>
-                <option value="name">Sort by Name</option>
-                <option value="joinDate">Sort by Join Date</option>
-              </select>
-            </div>
-          </div>
+    <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-5 md:p-6 mb-6 sm:mb-8">
+  <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-5 sm:mb-6">
+    <div className="mb-5 lg:mb-0">
+      <div className="flex items-center space-x-3 mb-3">
+        <div>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+            Gym Management
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-1">
+            Manage all registered gyms and their subscriptions
+          </p>
         </div>
       </div>
 
+      {/* Compact stats row */}
+      <div className="flex flex-wrap gap-3 sm:gap-4 mt-4">
+        {[
+          { label: 'Total Gyms', value: stats.totalGyms, icon: Building2, color: 'blue' },
+          { label: 'Active Gyms', value: stats.activeGyms, icon: CheckCircle, color: 'green' },
+          { label: 'Total Members', value: stats.totalMembers.toLocaleString(), icon: Users, color: 'purple' },
+          { label: 'Total Revenue', value: formatCurrency(stats.totalRevenue), icon: IndianRupee, color: 'amber' }
+        ].map((stat, index) => {
+          const Icon = stat.icon;
+          return (
+            <div 
+              key={index}
+              className="flex items-center space-x-2 sm:space-x-3 bg-gray-50 px-3 sm:px-4 py-2 rounded-lg border border-gray-200 min-w-[140px]"
+            >
+              <div className={`p-2 rounded-md ${
+                stat.color === 'blue' ? 'bg-blue-50' :
+                stat.color === 'green' ? 'bg-green-50' :
+                stat.color === 'purple' ? 'bg-purple-50' : 'bg-amber-50'
+              }`}>
+                <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                  stat.color === 'blue' ? 'text-blue-600' :
+                  stat.color === 'green' ? 'text-green-600' :
+                  stat.color === 'purple' ? 'text-purple-600' : 'text-amber-600'
+                }`} />
+              </div>
+              <div>
+                <div className="text-base sm:text-lg font-bold text-gray-900">
+                  {stat.value}
+                </div>
+                <div className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
+                  {stat.label}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+    <div className="flex flex-wrap gap-2 sm:gap-3 mt-4 lg:mt-0">
+      <button
+        onClick={() => navigate('/admin-control/gyms/new')}
+        className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-colors shadow-sm text-sm sm:text-base"
+      >
+        <Plus className="w-4 h-4" />
+        <span>Add New Gym</span>
+      </button>
+      <button 
+        className="flex items-center space-x-2 bg-white border border-gray-300 text-gray-700 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition-colors shadow-sm text-sm sm:text-base"
+      >
+        <Download className="w-4 h-4" />
+        <span className="hidden xs:inline">Export</span>
+      </button>
+      <button 
+        className="flex items-center space-x-2 bg-white border border-gray-300 text-gray-700 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition-colors shadow-sm text-sm sm:text-base"
+      >
+        <Printer className="w-4 h-4" />
+        <span className="hidden sm:inline">Print</span>
+      </button>
+    </div>
+  </div>
+
+  {/* ─── Single-row filter bar ──────────────────────────────────────────────── */}
+  <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+      {/* Search - takes more space */}
+      <div className="relative md:col-span-1 lg:col-span-1">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+        <input
+          type="text"
+          placeholder="Search gyms by name, owner or city..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+
+      {/* Status */}
+      <select
+        value={filterStatus}
+        onChange={(e) => setFilterStatus(e.target.value)}
+        className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      >
+        <option value="all">All Status</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+
+      {/* Plan */}
+      <select
+        value={filterPlan}
+        onChange={(e) => setFilterPlan(e.target.value)}
+        className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      >
+        <option value="all">All Plans</option>
+        {planOptions.map(plan => (
+          <option key={plan} value={plan}>{plan}</option>
+        ))}
+      </select>
+
+      {/* City */}
+      <select
+        value={filterCity}
+        onChange={(e) => setFilterCity(e.target.value)}
+        className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      >
+        <option value="all">All Cities</option>
+        {cityOptions.map(city => (
+          <option key={city} value={city}>{city}</option>
+        ))}
+      </select>
+
+      {/* Sort - last in the row */}
+      <select
+        value={sortBy}
+        onChange={(e) => setSortBy(e.target.value)}
+        className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      >
+        <option value="revenue">Sort by Revenue</option>
+        <option value="members">Sort by Members</option>
+        <option value="rating">Sort by Rating</option>
+        <option value="name">Sort by Name</option>
+        <option value="joinDate">Sort by Join Date</option>
+      </select>
+    </div>
+  </div>
+</div>
       {/* Gyms List/Grid */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
@@ -540,7 +548,9 @@ const AllGyms = () => {
         {viewMode === 'grid' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {currentGyms.map(gym => (
-              <div key={gym.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+             <Link to={'/admin-control/gym-management/gym-details'}>
+
+               <div key={gym.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                 {/* Gym Header */}
                 <div className="p-4 border-b border-gray-200">
                   <div className="flex items-center justify-between mb-3">
@@ -723,6 +733,8 @@ const AllGyms = () => {
                   </div>
                 )}
               </div>
+             
+             </Link>
             ))}
           </div>
         )}

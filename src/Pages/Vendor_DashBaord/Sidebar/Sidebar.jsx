@@ -795,7 +795,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
           </div>
 
           {/* 1️⃣3️⃣ Reports & Analytics */}
-          <div className="mb-3">
+          {/* <div className="mb-3">
             <button
               onClick={() => toggleSection('reports')}
               className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
@@ -833,7 +833,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                 ))}
               </div>
             )}
-          </div>
+          </div> */}
 
           {/* 1️⃣4️⃣ Notifications & Reminders */}
           <div className="mb-3">

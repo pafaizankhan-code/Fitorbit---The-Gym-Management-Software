@@ -54,6 +54,7 @@ import Classschedule from "./Pages/Vendor_DashBaord/Pages/Classschedule/Classsch
 import ClasscalendarView from "./Pages/Vendor_DashBaord/Pages/Classschedule/ClasscalendarView/ClasscalendarView";
 import CreateClassc from "./Pages/Vendor_DashBaord/Pages/Classschedule/CreateClassc/CreateClassc";
 import CreateOffer from "./Pages/Vendor_DashBaord/Pages/Offermanage/CreateOffer/CreateOffer";
+import GymDetails from "./Pages/AdminControl/Component/AllGyms/GymDetails/GymDetails";
 
 function AppContent() {
   const location = useLocation();
@@ -144,7 +145,8 @@ function AppContent() {
 
           {/* Child routes */}
           <Route path="members" element={<Usermaster />} />
-          <Route path="gyms" element={<AllGyms />} />
+          <Route path="gym-management" element={<AllGyms />} />
+          <Route path="gym-management/gym-details" element={<GymDetails />} />
           <Route path="gyms/new" element={<AddNewGyms />} />
           <Route path="plans" element={<GymPlans />} />
           <Route path="plans/new" element={<AddNewGymPlans />} />
