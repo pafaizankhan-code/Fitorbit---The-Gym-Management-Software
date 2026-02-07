@@ -15,7 +15,7 @@ import MainVendordahbaord from "./Pages/Vendor_DashBaord/Pages/Vendordahbaord/Ma
 import Help from "./Pages/Vendor_DashBaord/Pages/Help/Help";
 
 import BookDemo from "./Pages/BookDemo/BookDemo";
-
+import BlogManage from './Pages/BlogManage/BlogManage'
 import AddNewmember from "./Pages/Vendor_DashBaord/Pages/AllMembers/AddNewmember/AddNewmember";
 
 // ── Layout & Shared Components ───────────────────────────────────────────
@@ -55,6 +55,7 @@ import ClasscalendarView from "./Pages/Vendor_DashBaord/Pages/Classschedule/Clas
 import CreateClassc from "./Pages/Vendor_DashBaord/Pages/Classschedule/CreateClassc/CreateClassc";
 import CreateOffer from "./Pages/Vendor_DashBaord/Pages/Offermanage/CreateOffer/CreateOffer";
 import GymDetails from "./Pages/AdminControl/Component/AllGyms/GymDetails/GymDetails";
+import ManageWebsite from "./Pages/Vendor_DashBaord/Pages/ManageWebsite/ManageWebsite";
 
 function AppContent() {
   const location = useLocation();
@@ -82,6 +83,7 @@ function AppContent() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/book-demo" element={<BookDemo />} />
+        <Route path="/blogs" element={<BlogManage />} />
 
         {/* ── Vendor Dashboard (Nested Routes) ───────────────────────────── */}
         <Route path="/ultimate-control" element={<VendorDashboard />}>
@@ -131,6 +133,9 @@ function AppContent() {
 
 
           <Route path="offers/create" element={<CreateOffer />} />
+
+
+          <Route path="website/your-website" element={<ManageWebsite />} />
 
 
           {/* Settings & Others */}

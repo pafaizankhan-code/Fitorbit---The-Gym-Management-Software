@@ -34,7 +34,12 @@ import {
   Dumbbell,  // For Workout
   Apple,     // For Diet
   Percent,   // For Offers & Promotions
-  Clock      // ← Added for Class Schedule
+  Clock,     // For Class Schedule
+  Globe,     // For Website Management
+  Layout,    // For Pages
+  Image,     // For Images/Gallery
+  FileEdit,  // For Content
+  Palette    // For Design
 } from 'lucide-react';
 
 const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
@@ -44,20 +49,21 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
   const [expandedSections, setExpandedSections] = useState({
     dashboard: true,
     leads: false,
-    diet: false,        // ← Separated: Diet (default expanded)
-    workout: false,     // ← Separated: Workout (default expanded)
+    diet: false,
+    workout: false,
     members: false,
     membership: false,
-    offers: false,      // ← New for Offers & Promotions
+    offers: false,
     attendance: false,
-    classSchedule: false, // ← New for Class Schedule Management
+    classSchedule: false,
     payments: false,
-    finance: false,     // ← New for Finance Management
-    inventory: false,   // ← New for Inventory Management
+    finance: false,
+    inventory: false,
     staff: false,
     expenses: false,
     reports: false,
-    notifications: false
+    notifications: false,
+    website: false  // ← New for Website Management
   });
 
   const toggleSection = (section) => {
@@ -81,25 +87,25 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
     { id: 'add_lead', label: 'Add New Lead', path: 'leads/add', count: null },
   ];
 
-  // ← Separated: Diet Management
+  // Diet Management
   const dietManagement = [
     { id: 'diet_plans', label: 'Diet Plans', path: 'diet-workout/diet-plans', count: 23 },
     { id: 'add_diet', label: 'Create Diet Plan', path: 'diet-workout/add-diet', count: null },
   ];
 
-  // ← Separated: Workout Management
+  // Workout Management
   const workoutManagement = [
     { id: 'workout_plans', label: 'Workout Plans', path: 'diet-workout/workout-plans', count: 45 },
     { id: 'add_workout', label: 'Create Workout Plan', path: 'diet-workout/add-workout', count: null },
   ];
 
-  // ← New: Finance Management
+  // Finance Management
   const financeManagement = [
     { id: 'manage_invoice', label: 'Manage Invoice', path: 'finance/invoices', count: null },
     { id: 'add_invoices', label: 'Create Invoice', path: 'finance/add-invoices', count: null },
   ];
 
-  // ← New: Inventory Management
+  // Inventory Management
   const inventoryManagement = [
     { id: 'manage_products', label: 'Manage Supplements & Products', path: 'inventory/products', count: null },
     { id: 'stock_io', label: 'Stock In / Stock Out', path: 'inventory/stock', count: null },
@@ -107,12 +113,12 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
     { id: 'sales_tracking', label: 'Sales Tracking', path: 'inventory/sales', count: null },
   ];
 
-  // ← New: Offers & Promotions
+  // Offers & Promotions
   const offersPromotions = [
     { id: 'create_offers', label: 'Create Offers', path: 'offers/create', count: null },
   ];
 
-  // ← New: Class Schedule Management
+  // Class Schedule Management
   const classScheduleManagement = [
     { id: 'all_schedules', label: 'All Class Schedules', path: 'class-schedule/all', count: 25 },
     { id: 'add_class', label: 'Add New Class', path: 'class-schedule/add', count: null },
@@ -129,33 +135,22 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
   const membershipPlans = [
     { id: 'all_plans', label: 'All Plans', path: 'memberships/plans', count: 15 },
     { id: 'create_plan', label: 'Create New Plan', path: 'memberships/create', count: null },
-    // { id: 'offers', label: 'Discounts & Offers', path: 'memberships/offers', count: 3 },
   ];
 
   // Attendance Management
   const attendanceManagement = [
     { id: 'today_attendance', label: "Today's Attendance", path: 'attendance/today', count: '128/427' },
-    // { id: 'manual_entry', label: 'Manual Entry', path: 'attendance/manual', count: null },
-    // { id: 'qr_scanner', label: 'QR Scanner', path: 'attendance/qr', count: null },
-    // { id: 'attendance_reports', label: 'Attendance Reports', path: 'attendance/reports', count: null },
-    // { id: 'absent_list', label: 'Absent Members', path: 'attendance/absent', count: 12 },
   ];
 
   // Payments & Billing
   const paymentsBilling = [
     // { id: 'collect_payment', label: 'Collect Payment', path: 'payments/collect', count: null },
-    // { id: 'pending_payments', label: 'Pending Dues', path: 'payments/pending', count: 32 },
-    // { id: 'payment_history', label: 'Payment History', path: 'payments/history', count: '₹4.8L' },
-    // { id: 'invoices', label: 'Invoices', path: 'payments/invoices', count: 412 },
-    // { id: 'partial_payments', label: 'Partial Payments', path: 'payments/partial', count: 18 },
   ];
 
   // Staff/Trainer Management
   const staffManagement = [
     { id: 'all_staff', label: 'All Staff', path: 'staff/all', count: 12 },
     { id: 'add_staff', label: 'Add Staff', path: 'staff/add', count: null },
-    // { id: 'trainers', label: 'Trainers', path: 'staff/trainers', count: 6 },
-    // { id: 'receptionists', label: 'Receptionists', path: 'staff/reception', count: 3 },
     { id: 'permissions', label: 'Role Permissions', path: 'staff/permissions', count: null },
     { id: 'salary', label: 'Salary Setup', path: 'staff/salary', count: null },
   ];
@@ -164,11 +159,6 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
   const expenseManagement = [
     { id: 'manage_expense', label: 'Manage Expense', path: 'expenses/manage_expense', count: null },
     { id: 'add_expense', label: 'Add Expense', path: 'expenses/add', count: null },
-    // { id: 'expense_types', label: 'Expense Types', path: 'expenses/types', count: 8 },
-    // { id: 'monthly_expenses', label: 'Monthly Expenses', path: 'expenses/monthly', count: '₹1.2L' },
-    // { id: 'rent_utilities', label: 'Rent & Utilities', path: 'expenses/rent', count: null },
-    // { id: 'equipment', label: 'Equipment', path: 'expenses/equipment', count: null },
-    // { id: 'profit_loss', label: 'Profit & Loss', path: 'expenses/profit-loss', count: null },
   ];
 
   // Reports & Analytics
@@ -184,17 +174,16 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
   // Notifications & Reminders
   const notifications = [
     { id: 'all_notifications', label: 'All Notifications', path: 'notifications/all', count: 24 },
-    // { id: 'expiry_reminders', label: 'Expiry Reminders', path: 'notifications/expiry', count: 18 },
-    // { id: 'payment_reminders', label: 'Payment Reminders', path: 'notifications/payment', count: 32 },
-    // { id: 'broadcast', label: 'Broadcast Messages', path: 'notifications/broadcast', count: null },
-    // { id: 'whatsapp_sms', label: 'WhatsApp/SMS Setup', path: 'notifications/setup', count: null },
+  ];
+
+  // ← NEW: Website Management
+  const websiteManagement = [
+    { id: 'website_dashboard', label: 'Manage Website', path: 'website/your-website', count: null },
   ];
 
   // System
   const system = [
     { id: 'settings', label: 'Settings', icon: Settings, path: 'settings' },
-    // { id: 'database', label: 'Database Backup', icon: Database, path: 'database' },
-    // { id: 'security', label: 'Security', icon: Shield, path: 'security' },
     { id: 'help', label: 'Help & Support', icon: HelpCircle, path: 'help' },
   ];
 
@@ -261,7 +250,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
                 <div>
-                  <h1 className="text-lg font-bold text-black">Your Gym Name </h1>
+                  <h1 className="text-lg font-bold text-black">Your Gym Name</h1>
                   <p className="text-xs text-gray-600">Management System</p>
                 </div>
               </div>
@@ -382,7 +371,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
             )}
           </div>
 
-          {/* ← Separated: 3️⃣ Diet Management */}
+          {/* 3️⃣ Diet Management */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('diet')}
@@ -423,7 +412,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
             )}
           </div>
 
-          {/* ← Separated: 4️⃣ Workout Management */}
+          {/* 4️⃣ Workout Management */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('workout')}
@@ -546,7 +535,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
             )}
           </div>
 
-          {/* ← New: Offers & Promotions */}
+          {/* 7️⃣ Offers & Promotions */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('offers')}
@@ -587,7 +576,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
             )}
           </div>
 
-          {/* 7️⃣ Attendance Management */}
+          {/* 8️⃣ Attendance Management */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('attendance')}
@@ -628,7 +617,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
             )}
           </div>
 
-          {/* ← New: 8️⃣ Class Schedule Management */}
+          {/* 9️⃣ Class Schedule Management */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('classSchedule')}
@@ -669,7 +658,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
             )}
           </div>
 
-          {/* ← New: 9️⃣ Finance Management */}
+          {/* 🔟 Finance Management */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('finance')}
@@ -710,9 +699,89 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
             )}
           </div>
 
-        
+          {/* 1️⃣1️⃣ Inventory Management */}
+          <div className="mb-3">
+            <button
+              onClick={() => toggleSection('inventory')}
+              className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
+            >
+              <div className="flex items-center">
+                <Package className="w-4 h-4 mr-3 text-blue-600" />
+                <span className="text-sm font-medium text-black">Inventory Management</span>
+              </div>
+              {expandedSections.inventory ? (
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-500" />
+              )}
+            </button>
+            
+            {expandedSections.inventory && (
+              <div className="mt-1 space-y-0.5">
+                {inventoryManagement.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavigation(item.path)}
+                    className={`w-full flex items-center justify-between px-5 pl-10 py-2 text-left ${
+                      isActive(item.path)
+                        ? 'bg-blue-50 border-r-4 border-blue-600' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className={`text-sm ${
+                      isActive(item.path) ? 'text-blue-600 font-medium' : 'text-gray-700'
+                    }`}>
+                      {item.label}
+                    </span>
+                    
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
-          {/* 1️⃣1️⃣ Staff/Trainer Management */}
+          {/* ← NEW: 1️⃣2️⃣ Website Management */}
+          <div className="mb-3">
+            <button
+              onClick={() => toggleSection('website')}
+              className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
+            >
+              <div className="flex items-center">
+                <Globe className="w-4 h-4 mr-3 text-blue-600" />
+                <span className="text-sm font-medium text-black">Manage My Website</span>
+              </div>
+              {expandedSections.website ? (
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-gray-500" />
+              )}
+            </button>
+            
+            {expandedSections.website && (
+              <div className="mt-1 space-y-0.5">
+                {websiteManagement.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavigation(item.path)}
+                    className={`w-full flex items-center justify-between px-5 pl-10 py-2 text-left ${
+                      isActive(item.path)
+                        ? 'bg-blue-50 border-r-4 border-blue-600' 
+                        : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className={`text-sm ${
+                      isActive(item.path) ? 'text-blue-600 font-medium' : 'text-gray-700'
+                    }`}>
+                      {item.label}
+                    </span>
+                    {item.count && renderCount(item.count)}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 1️⃣3️⃣ Staff/Trainer Management */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('staff')}
@@ -753,7 +822,7 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
             )}
           </div>
 
-          {/* 1️⃣2️⃣ Expense Management */}
+          {/* 1️⃣4️⃣ Expense Management */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('expenses')}
@@ -794,8 +863,8 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
             )}
           </div>
 
-          {/* 1️⃣3️⃣ Reports & Analytics */}
-          {/* <div className="mb-3">
+          {/* 1️⃣5️⃣ Reports & Analytics */}
+          <div className="mb-3">
             <button
               onClick={() => toggleSection('reports')}
               className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-100"
@@ -833,9 +902,9 @@ const Sidebar = ({ isMobile, isSidebarOpen, onClose }) => {
                 ))}
               </div>
             )}
-          </div> */}
+          </div>
 
-          {/* 1️⃣4️⃣ Notifications & Reminders */}
+          {/* 1️⃣6️⃣ Notifications & Reminders */}
           <div className="mb-3">
             <button
               onClick={() => toggleSection('notifications')}
